@@ -131,6 +131,13 @@
       <artifactId>org.osgi.service.metatype.annotations</artifactId>
       <scope>provided</scope>
     </dependency>
+    <!-- Apache Commons -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.9</version>
+      <scope>provided</scope>
+    </dependency>
     <!-- Apache Felix -->
     <dependency>
       <groupId>org.apache.felix</groupId>
@@ -157,6 +164,13 @@
       <artifactId>failureaccess</artifactId>
       <version>1.0.1</version>
       <scope>test</scope>
+    </dependency>
+    <!-- Jasypt -->
+    <dependency>
+      <groupId>org.apache.servicemix.bundles</groupId>
+      <artifactId>org.apache.servicemix.bundles.jasypt</artifactId>
+      <version>1.9.3_1</version>
+      <scope>provided</scope>
     </dependency>
     <!-- JSR 305-->
     <dependency>
