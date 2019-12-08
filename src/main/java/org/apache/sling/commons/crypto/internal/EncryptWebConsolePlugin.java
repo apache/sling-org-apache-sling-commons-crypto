@@ -166,6 +166,9 @@ public class EncryptWebConsolePlugin extends HttpServlet {
 
     private @Nullable CryptoService findCryptoService(@NotNull final String id) {
         final ServiceReference<CryptoService>[] references = tracker.getServiceReferences();
+        if (Objects.isNull(references) || references.length == 0) {
+            return null;
+        }
         for (final ServiceReference<CryptoService> reference : references) {
             if (id.equals(reference.getProperty(COMPONENT_ID).toString())) {
                 return bundleContext.getService(reference);
