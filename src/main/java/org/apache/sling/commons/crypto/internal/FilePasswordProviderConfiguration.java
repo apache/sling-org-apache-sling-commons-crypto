@@ -39,4 +39,6 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     )
     String path();
 
+    String webconsole_configurationFactory_nameHint() default "{names} {path}";
+
 }
