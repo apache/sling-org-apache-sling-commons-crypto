@@ -21,7 +21,6 @@ package org.apache.sling.commons.crypto.it.tests.jasypt;
 import javax.inject.Inject;
 
 import org.apache.sling.commons.crypto.CryptoService;
-import org.apache.sling.commons.crypto.it.tests.CryptoTestSupport;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
@@ -38,7 +37,7 @@ import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.factoryConfigurati
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class JasyptStandardPBEStringCryptoServiceIT extends CryptoTestSupport {
+public class JasyptStandardPBEStringCryptoServiceIT extends JasyptCryptoTestSupport {
 
     @Inject
     private CryptoService cryptoService;

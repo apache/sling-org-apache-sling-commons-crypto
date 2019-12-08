@@ -16,22 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.sling.commons.crypto.jasypt.internal;
+package org.apache.sling.commons.crypto.it.tests.jasypt;
 
-import org.jasypt.iv.RandomIvGenerator;
-import org.osgi.service.metatype.annotations.AttributeDefinition;
-import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+import org.apache.sling.commons.crypto.it.tests.CryptoTestSupport;
+import org.ops4j.pax.exam.options.ModifiableCompositeOption;
 
-@ObjectClassDefinition(
-    name = "Apache Sling Commons Crypto “Jasypt Random IV Generator Registrar”",
-    description = "Registers a Jasypt RandomIvGenerator as service"
-)
-@interface JasyptRandomIvGeneratorRegistrarConfiguration {
+import static org.ops4j.pax.exam.CoreOptions.composite;
+import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 
-    @AttributeDefinition(
-        name = "Algorithm",
-        description = "secure random number generation algorithm"
-    )
-    String algorithm() default RandomIvGenerator.DEFAULT_SECURE_RANDOM_ALGORITHM;
+public abstract class JasyptCryptoTestSupport extends CryptoTestSupport {
+
+    public ModifiableCompositeOption baseConfiguration() {
+        return composite(
+            super.baseConfiguration(),
+            mavenBundle().groupId("org.apache.servicemix.bundles").artifactId("org.apache.servicemix.bundles.jasypt").versionAsInProject()
+        );
+    }
 
 }

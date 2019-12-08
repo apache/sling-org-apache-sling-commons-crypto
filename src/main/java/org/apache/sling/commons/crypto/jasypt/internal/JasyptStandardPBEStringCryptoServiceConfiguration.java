@@ -28,7 +28,7 @@ import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBT
 
 @ObjectClassDefinition(
     name = "Apache Sling Commons Crypto “Jasypt Standard PBE String Crypto Service”",
-    description = "TODO"
+    description = "Crypto service which uses Jasypt StandardPBEStringEncryptor for encryption and decryption"
 )
 @interface JasyptStandardPBEStringCryptoServiceConfiguration {
 
@@ -40,7 +40,7 @@ import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBT
 
     @AttributeDefinition(
         name = "Algorithm",
-        description = "TODO"
+        description = "crypto algorithm"
     )
     String algorithm() default "PBEWITHHMACSHA512ANDAES_256";
 
@@ -51,14 +51,14 @@ import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBT
     int keyObtentionIterations() default DEFAULT_KEY_OBTENTION_ITERATIONS;
 
     @AttributeDefinition(
-        name = "Provider Name",
-        description = "TODO"
+        name = "Security Provider Name",
+        description = "name of the Security Provider"
     )
-    String providerName();
+    String securityProviderName();
 
     @AttributeDefinition(
         name = "String Output Type",
-        description = "TODO",
+        description = "encoding format of the encrypted string output",
         options = {
             @Option(label = "Base16 (hexadecimal)", value = STRING_OUTPUT_TYPE_HEXADECIMAL),
             @Option(label = "Base64", value = STRING_OUTPUT_TYPE_BASE64)
@@ -67,27 +67,27 @@ import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBT
     String stringOutputType() default STRING_OUTPUT_TYPE_BASE64;
 
     @AttributeDefinition(
-        name = "Provider Name",
-        description = "TODO"
+        name = "Password Provider Target",
+        description = "filter expression to target a Password Provider"
     )
-    String passwordProvider_target();
+    String passwordProvider_target() default "*";
 
     @AttributeDefinition(
-        name = "Provider Name",
+        name = "Security Provider Target",
         description = "filter expression to target a Security Provider"
     )
-    String provider_target();
+    String securityProvider_target() default "*";
 
     @AttributeDefinition(
         name = "IV Generator Target",
         description = "filter expression to target an IV Generator"
     )
-    String ivGenerator_target();
+    String ivGenerator_target() default "*";
 
     @AttributeDefinition(
-        name = "Provider Name",
+        name = "Salt Generator Target",
         description = "filter expression to target a Salt Generator"
     )
-    String saltGenerator_target();
+    String saltGenerator_target() default "*";
 
 }

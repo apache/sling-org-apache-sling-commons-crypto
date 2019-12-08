@@ -63,7 +63,7 @@ public class JasyptStandardPBEStringCryptoService implements CryptoService {
     @Reference(
         cardinality = ReferenceCardinality.OPTIONAL
     )
-    private volatile Provider provider;
+    private volatile Provider securityProvider;
 
     @Reference(
         cardinality = ReferenceCardinality.OPTIONAL
@@ -111,10 +111,10 @@ public class JasyptStandardPBEStringCryptoService implements CryptoService {
         // optional
         encryptor.setKeyObtentionIterations(configuration.keyObtentionIterations());
         encryptor.setStringOutputType(configuration.stringOutputType());
-        if (StringUtils.isNotBlank(configuration.providerName())) {
-            encryptor.setProviderName(configuration.providerName());
+        if (StringUtils.isNotBlank(configuration.securityProviderName())) {
+            encryptor.setProviderName(configuration.securityProviderName());
         }
-        final Provider provider = this.provider;
+        final Provider provider = this.securityProvider;
         if (Objects.nonNull(provider)) {
             encryptor.setProvider(provider);
         }

@@ -1,3 +1,26 @@
+DynamicImport-Package:\
+  org.jasypt.encryption.pbe,\
+  org.jasypt.iv,\
+  org.jasypt.registry,\
+  org.jasypt.salt
+
+Import-Package:\
+  org.jasypt.encryption.pbe;resolution:=optional,\
+  org.jasypt.iv;resolution:=optional,\
+  org.jasypt.registry;resolution:=optional,\
+  org.jasypt.salt;resolution:=optional,\
+  *
+
+Require-Capability:\
+  osgi.service;filter:="(objectClass=org.apache.sling.commons.crypto.PasswordProvider)";effective:=active;resolution:=optional,\
+  osgi.service;filter:="(objectClass=org.jasypt.iv.IvGenerator)";effective:=active;resolution:=optional
+
+-plugin:\
+  org.apache.sling.bnd.plugin.headers.parameters.remove.Plugin;\
+    'Require-Capability'='osgi.service;filter:="(objectClass=org.apache.sling.commons.crypto.PasswordProvider)";effective:=active',\
+  org.apache.sling.bnd.plugin.headers.parameters.remove.Plugin;\
+    'Require-Capability'='osgi.service;filter:="(objectClass=org.jasypt.iv.IvGenerator)";effective:=active'
+
 -removeheaders:\
   Include-Resource,\
   Private-Package
