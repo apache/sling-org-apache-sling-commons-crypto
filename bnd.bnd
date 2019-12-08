@@ -1,10 +1,14 @@
 DynamicImport-Package:\
+  javax.servlet,\
+  javax.servlet.http,\
   org.jasypt.encryption.pbe,\
   org.jasypt.iv,\
   org.jasypt.registry,\
   org.jasypt.salt
 
 Import-Package:\
+  javax.servlet;resolution:=optional,\
+  javax.servlet.http;resolution:=optional,\
   org.jasypt.encryption.pbe;resolution:=optional,\
   org.jasypt.iv;resolution:=optional,\
   org.jasypt.registry;resolution:=optional,\
