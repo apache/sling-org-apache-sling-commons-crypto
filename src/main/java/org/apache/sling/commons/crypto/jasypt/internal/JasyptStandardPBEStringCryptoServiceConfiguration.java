@@ -90,4 +90,6 @@ import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBT
     )
     String saltGenerator_target() default "*";
 
+    String webconsole_configurationFactory_nameHint() default "{names} {algorithm}";
+
 }

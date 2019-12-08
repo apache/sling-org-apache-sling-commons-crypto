@@ -34,4 +34,6 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     )
     String algorithm() default RandomSaltGenerator.DEFAULT_SECURE_RANDOM_ALGORITHM;
 
+    String webconsole_configurationFactory_nameHint() default "{algorithm}";
+
 }
