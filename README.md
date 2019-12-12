@@ -6,3 +6,6 @@
 
 This module is part of the [Apache Sling](https://sling.apache.org) project.
 
+This module contains a simple crypto API and an extensible but optional implementation based on Jasypt as well as an plugin for Felix Web Console to encrypt messages.
+
+See [Sling's documentation for Commons Crypto](https://sling.apache.org/documentation/bundles/commons-crypto.html) for details.
