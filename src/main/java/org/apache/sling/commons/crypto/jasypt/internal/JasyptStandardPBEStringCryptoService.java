@@ -136,8 +136,8 @@ public class JasyptStandardPBEStringCryptoService implements CryptoService {
     }
 
     @Override
-    public @NotNull String decrypt(@NotNull final String message) {
-        return encryptor.decrypt(message);
+    public @NotNull String decrypt(@NotNull final String ciphertext) {
+        return encryptor.decrypt(ciphertext);
     }
 
 }

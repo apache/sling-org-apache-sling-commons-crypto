@@ -34,9 +34,10 @@ import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBT
 
     @AttributeDefinition(
         name = "Names",
-        description = "names of this service"
+        description = "names of this service",
+        required = false
     )
-    String[] names() default {"default"};
+    String[] names() default {};
 
     @AttributeDefinition(
         name = "Algorithm",
@@ -52,7 +53,8 @@ import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBT
 
     @AttributeDefinition(
         name = "Security Provider Name",
-        description = "name of the Security Provider"
+        description = "name of the Security Provider",
+        required = false
     )
     String securityProviderName();
 
@@ -68,27 +70,31 @@ import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBT
 
     @AttributeDefinition(
         name = "Password Provider Target",
-        description = "filter expression to target a Password Provider"
+        description = "filter expression to target a Password Provider",
+        required = false
     )
-    String passwordProvider_target() default "*";
+    String passwordProvider_target();
 
     @AttributeDefinition(
         name = "Security Provider Target",
-        description = "filter expression to target a Security Provider"
+        description = "filter expression to target a Security Provider",
+        required = false
     )
-    String securityProvider_target() default "*";
+    String securityProvider_target();
 
     @AttributeDefinition(
         name = "IV Generator Target",
-        description = "filter expression to target an IV Generator"
+        description = "filter expression to target an IV Generator",
+        required = false
     )
-    String ivGenerator_target() default "*";
+    String ivGenerator_target();
 
     @AttributeDefinition(
         name = "Salt Generator Target",
-        description = "filter expression to target a Salt Generator"
+        description = "filter expression to target a Salt Generator",
+        required = false
     )
-    String saltGenerator_target() default "*";
+    String saltGenerator_target();
 
     String webconsole_configurationFactory_nameHint() default "{names} {algorithm}";
 
