@@ -29,9 +29,10 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
     @AttributeDefinition(
         name = "Names",
-        description = "names of this service"
+        description = "names of this service",
+        required = false
     )
-    String[] names() default {"default"};
+    String[] names() default {};
 
     @AttributeDefinition(
         name = "Path",
