@@ -43,7 +43,8 @@ public abstract class CryptoTestSupport extends TestSupport {
             wrappedBundle(mavenBundle().groupId("com.google.truth").artifactId("truth").versionAsInProject()),
             mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
             mavenBundle().groupId("com.google.guava").artifactId("failureaccess").versionAsInProject(),
-            mavenBundle().groupId("com.googlecode.java-diff-utils").artifactId("diffutils").versionAsInProject()
+            mavenBundle().groupId("com.googlecode.java-diff-utils").artifactId("diffutils").versionAsInProject(),
+            vmOption(System.getProperty("jacoco.command"))
         );
     }
 
