@@ -26,6 +26,7 @@ import static org.apache.sling.testing.paxexam.SlingOptions.scr;
 import static org.ops4j.pax.exam.CoreOptions.composite;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.CoreOptions.vmOption;
 import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 
 public abstract class CryptoTestSupport extends TestSupport {
