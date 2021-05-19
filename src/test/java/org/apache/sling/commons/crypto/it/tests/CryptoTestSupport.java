@@ -36,7 +36,6 @@ public abstract class CryptoTestSupport extends TestSupport {
             super.baseConfiguration(),
             // Sling Commons Crypto
             testBundle("bundle.filename"),
-            mavenBundle().groupId("org.apache.commons").artifactId("commons-lang3").versionAsInProject(),
             scr(),
             // testing
             junitBundles(),

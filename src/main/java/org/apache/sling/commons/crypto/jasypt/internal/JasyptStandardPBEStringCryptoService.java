@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.commons.crypto.CryptoService;
 import org.apache.sling.commons.crypto.PasswordProvider;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
@@ -111,8 +110,9 @@ public class JasyptStandardPBEStringCryptoService implements CryptoService {
         // optional
         encryptor.setKeyObtentionIterations(configuration.keyObtentionIterations());
         encryptor.setStringOutputType(configuration.stringOutputType());
-        if (StringUtils.isNotBlank(configuration.securityProviderName())) {
-            encryptor.setProviderName(configuration.securityProviderName());
+        final String securityProviderName = configuration.securityProviderName();
+        if (Objects.nonNull(securityProviderName) && !securityProviderName.isBlank()) {
+            encryptor.setProviderName(securityProviderName);
         }
         final Provider provider = this.securityProvider;
         if (Objects.nonNull(provider)) {
