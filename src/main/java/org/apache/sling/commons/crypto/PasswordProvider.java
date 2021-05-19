@@ -24,6 +24,6 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface PasswordProvider {
 
-    @NotNull char[] getPassword();
+    char @NotNull [] getPassword();
 
 }

@@ -97,7 +97,7 @@ public class FilePasswordProvider implements PasswordProvider {
     }
 
     @Override
-    public @NotNull char[] getPassword() {
+    public char @NotNull [] getPassword() {
         try {
             return readPassword(configuration.path());
         } catch (IOException e) {
