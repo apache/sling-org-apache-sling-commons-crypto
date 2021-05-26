@@ -79,11 +79,19 @@ public class FilePasswordProvider implements PasswordProvider {
         final File file = new File(path);
         final char[] buffer = new char[(int) file.length()];
         try (final BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
-            final int size = reader.read(buffer);
+            final int size = getSize(reader.read(buffer));
             final char[] password = new char[size];
             System.arraycopy(buffer, 0, password, 0, size);
             Arrays.fill(buffer, '0');
             return password;
+        }
+    }
+
+    private int getSize(int readSize) {
+        if (configuration.removeNewline()) {
+            return readSize - 1;
+        } else {
+            return readSize;
         }
     }
 

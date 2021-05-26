@@ -19,6 +19,7 @@
 package org.apache.sling.commons.crypto.internal;
 
 import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.AttributeType;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 @ObjectClassDefinition(
@@ -39,6 +40,13 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
         description = "path to password file"
     )
     String path();
+
+    @AttributeDefinition(
+        name = "Remove Final Newline",
+        description = "removes the final character from the file to remove a trailing newline",
+        type = AttributeType.BOOLEAN
+    )
+    boolean removeNewline() default false;
 
     String webconsole_configurationFactory_nameHint() default "{names} {path}";
 

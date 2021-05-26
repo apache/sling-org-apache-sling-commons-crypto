@@ -55,6 +55,7 @@ public class JasyptStandardPBEStringCryptoServiceIT extends JasyptCryptoTestSupp
                 .asOption(),
             factoryConfiguration("org.apache.sling.commons.crypto.internal.FilePasswordProvider")
                 .put("path", path)
+                .put("removeNewline", true)
                 .asOption()
         );
     }
