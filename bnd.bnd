@@ -1,3 +1,5 @@
+Bundle-DocURL: https://sling.apache.org/documentation/bundles/commons-crypto.html
+
 DynamicImport-Package:\
   javax.servlet,\
   javax.servlet.http,\
