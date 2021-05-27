@@ -30,6 +30,7 @@ import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBT
     name = "Apache Sling Commons Crypto “Jasypt Standard PBE String Crypto Service”",
     description = "Crypto service which uses Jasypt StandardPBEStringEncryptor for encryption and decryption"
 )
+@SuppressWarnings("java:S100")
 @interface JasyptStandardPBEStringCryptoServiceConfiguration {
 
     @AttributeDefinition(

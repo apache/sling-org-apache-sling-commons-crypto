@@ -26,6 +26,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     name = "Apache Sling Commons Crypto “Jasypt Random Salt Generator Registrar”",
     description = "Registers a Jasypt RandomSaltGenerator as service"
 )
+@SuppressWarnings("java:S100")
 @interface JasyptRandomSaltGeneratorRegistrarConfiguration {
 
     @AttributeDefinition(
