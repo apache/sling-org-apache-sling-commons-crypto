@@ -50,38 +50,46 @@ public class FilePasswordProvider implements PasswordProvider {
 
     private FilePasswordProviderConfiguration configuration;
 
+    private static final char NEWLINE_CHARACTER = '\n';
+
     private final Logger logger = LoggerFactory.getLogger(FilePasswordProvider.class);
 
     public FilePasswordProvider() {
     }
 
     @Activate
-    private void activate(final FilePasswordProviderConfiguration configuration) throws IOException {
+    protected void activate(final FilePasswordProviderConfiguration configuration) throws IOException {
         logger.debug("activating");
         this.configuration = configuration;
         checkConfiguration();
     }
 
     @Modified
-    private void modified(final FilePasswordProviderConfiguration configuration) throws IOException {
+    protected void modified(final FilePasswordProviderConfiguration configuration) throws IOException {
         logger.debug("modifying");
         this.configuration = configuration;
         checkConfiguration();
     }
 
     @Deactivate
-    private void deactivate() {
+    protected void deactivate() {
         logger.debug("deactivating");
         this.configuration = null;
     }
 
-    private char[] readPassword(final String path) throws IOException {
+    private char[] readPassword(final String path, final boolean fixPosixNewline) throws IOException {
         final File file = new File(path);
         final char[] buffer = new char[(int) file.length()];
         try (final BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
             final int size = reader.read(buffer);
-            final char[] password = new char[size];
-            System.arraycopy(buffer, 0, password, 0, size);
+            final int length;
+            if (fixPosixNewline && buffer[size - 1] == NEWLINE_CHARACTER) {
+                length = size - 1;
+            } else {
+                length = size;
+            }
+            final char[] password = new char[length];
+            System.arraycopy(buffer, 0, password, 0, length);
             Arrays.fill(buffer, '0');
             return password;
         }
@@ -99,7 +107,7 @@ public class FilePasswordProvider implements PasswordProvider {
     @Override
     public char @NotNull [] getPassword() {
         try {
-            return readPassword(configuration.path());
+            return readPassword(configuration.path(), configuration.fix_posixNewline());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

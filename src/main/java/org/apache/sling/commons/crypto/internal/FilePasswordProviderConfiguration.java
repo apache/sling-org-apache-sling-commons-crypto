@@ -40,6 +40,12 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     )
     String path();
 
+    @AttributeDefinition(
+        name = "Fix POSIX newline",
+        description = "ignores the very last newline character from file content for password"
+    )
+    boolean fix_posixNewline() default false;
+
     String webconsole_configurationFactory_nameHint() default "{names} {path}";
 
 }
