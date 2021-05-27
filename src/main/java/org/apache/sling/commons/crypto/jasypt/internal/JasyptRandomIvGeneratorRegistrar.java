@@ -50,7 +50,7 @@ public class JasyptRandomIvGeneratorRegistrar {
 
     private final Logger logger = LoggerFactory.getLogger(JasyptRandomIvGeneratorRegistrar.class);
 
-    public JasyptRandomIvGeneratorRegistrar() {
+    public JasyptRandomIvGeneratorRegistrar() { //
     }
 
     @Activate

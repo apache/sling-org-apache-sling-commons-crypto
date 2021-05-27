@@ -63,7 +63,7 @@ public class EncryptWebConsolePlugin extends HttpServlet {
 
     private static final String ATTRIBUTE_CIPHERTEXT = "org.apache.sling.commons.crypto.internal.EncryptWebConsolePlugin.ciphertext";
 
-    public EncryptWebConsolePlugin() {
+    public EncryptWebConsolePlugin() { //
     }
 
     @Activate

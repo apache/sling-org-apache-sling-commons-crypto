@@ -54,7 +54,7 @@ public class FilePasswordProvider implements PasswordProvider {
 
     private final Logger logger = LoggerFactory.getLogger(FilePasswordProvider.class);
 
-    public FilePasswordProvider() {
+    public FilePasswordProvider() { //
     }
 
     @Activate

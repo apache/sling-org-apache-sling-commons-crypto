@@ -50,7 +50,7 @@ public class JasyptRandomSaltGeneratorRegistrar {
 
     private final Logger logger = LoggerFactory.getLogger(JasyptRandomSaltGeneratorRegistrar.class);
 
-    public JasyptRandomSaltGeneratorRegistrar() {
+    public JasyptRandomSaltGeneratorRegistrar() { //
     }
 
     @Activate

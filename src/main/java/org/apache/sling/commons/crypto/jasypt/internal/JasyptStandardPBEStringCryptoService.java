@@ -73,7 +73,7 @@ public class JasyptStandardPBEStringCryptoService implements CryptoService {
 
     private final Logger logger = LoggerFactory.getLogger(JasyptStandardPBEStringCryptoService.class);
 
-    public JasyptStandardPBEStringCryptoService() {
+    public JasyptStandardPBEStringCryptoService() { //
     }
 
     @Activate
