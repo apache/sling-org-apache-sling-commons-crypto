@@ -31,7 +31,6 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.PathUtils;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.jasypt.iv.RandomIvGenerator.DEFAULT_SECURE_RANDOM_ALGORITHM;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.factoryConfiguration;
 
@@ -51,7 +50,10 @@ public class JasyptStandardPBEStringCryptoServiceIT extends JasyptCryptoTestSupp
                 .put("algorithm", "PBEWITHHMACSHA512ANDAES_256")
                 .asOption(),
             factoryConfiguration("org.apache.sling.commons.crypto.jasypt.internal.JasyptRandomIvGeneratorRegistrar")
-                .put("algorithm", DEFAULT_SECURE_RANDOM_ALGORITHM)
+                .put("algorithm", "SHA1PRNG")
+                .asOption(),
+            factoryConfiguration("org.apache.sling.commons.crypto.jasypt.internal.JasyptRandomSaltGeneratorRegistrar")
+                .put("algorithm", "SHA1PRNG")
                 .asOption(),
             factoryConfiguration("org.apache.sling.commons.crypto.internal.FilePasswordProvider")
                 .put("path", path)
