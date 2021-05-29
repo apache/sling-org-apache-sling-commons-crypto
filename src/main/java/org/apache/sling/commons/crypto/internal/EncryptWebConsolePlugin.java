@@ -35,13 +35,12 @@ import org.apache.sling.commons.crypto.CryptoService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.util.tracker.ServiceTracker;
-
-import static org.osgi.service.component.ComponentConstants.COMPONENT_ID;
 
 @Component(
     service = Servlet.class,
@@ -57,7 +56,7 @@ public class EncryptWebConsolePlugin extends HttpServlet {
 
     private ServiceTracker<CryptoService, CryptoService> tracker;
 
-    private static final String PARAMETER_ID = "id";
+    private static final String PARAMETER_SERVICE_ID = "service-id";
 
     private static final String PARAMETER_MESSAGE = "message";
 
@@ -97,7 +96,7 @@ public class EncryptWebConsolePlugin extends HttpServlet {
         if (Objects.nonNull(forwardRequestUri) && forwardRequestUri.equals(request.getRequestURI())) {
             final String ciphertext = (String) request.getAttribute(ATTRIBUTE_CIPHERTEXT);
             if (Objects.nonNull(ciphertext)) {
-                final String html = String.format("<p>Encrypted message: %s</p>", ciphertext);
+                final String html = String.format("<p id=\"ciphertext\">Encrypted message: %s</p>", ciphertext);
                 writer.println(html);
             }
         }
@@ -106,19 +105,19 @@ public class EncryptWebConsolePlugin extends HttpServlet {
     @Override
     protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
         request.removeAttribute(ATTRIBUTE_CIPHERTEXT);
-        final String id = request.getParameter(PARAMETER_ID);
+        final String serviceId = request.getParameter(PARAMETER_SERVICE_ID);
         final String message = request.getParameter(PARAMETER_MESSAGE); // do NOT log SECRET message
-        if (Objects.isNull(id)) {
-            handleParameterMissing(response, PARAMETER_ID);
+        if (Objects.isNull(serviceId)) {
+            handleParameterMissing(response, PARAMETER_SERVICE_ID);
             return;
         }
         if (Objects.isNull(message)) {
             handleParameterMissing(response, PARAMETER_MESSAGE);
             return;
         }
-        final CryptoService cryptoService = findCryptoService(id);
+        final CryptoService cryptoService = findCryptoService(serviceId);
         if (Objects.isNull(cryptoService)) {
-            handleCryptoServiceNotFound(response, id);
+            handleCryptoServiceNotFound(response, serviceId);
             return;
         }
         final String ciphertext = cryptoService.encrypt(message);
@@ -133,7 +132,7 @@ public class EncryptWebConsolePlugin extends HttpServlet {
     }
 
     private void handleCryptoServiceNotFound(final HttpServletResponse response, final String id) throws IOException {
-        final String message = String.format("Crypto service with component id %s not found", id);
+        final String message = String.format("Crypto service with service id %s not found", id);
         response.sendError(404, message);
     }
 
@@ -146,12 +145,12 @@ public class EncryptWebConsolePlugin extends HttpServlet {
         builder.append("<br>");
         builder.append("<label>Available crypto services");
         builder.append("<br>");
-        builder.append("<select name=\"id\">");
+        builder.append("<select id=\"service-id\" name=\"service-id\">");
         for (final ServiceReference<CryptoService> reference : references) {
-            final String id = reference.getProperty(COMPONENT_ID).toString();
+            final String id = reference.getProperty(Constants.SERVICE_ID).toString();
             final String[] names = (String[]) reference.getProperty("names");
             final String algorithm = reference.getProperty("algorithm").toString();
-            final String label = String.format("Component id %s, names: %s, algorithm: %s", id, Arrays.toString(names), algorithm);
+            final String label = String.format("Service id %s, names: %s, algorithm: %s", id, Arrays.toString(names), algorithm);
             builder.append("<option value=\"").append(id).append("\">");
             builder.append(label);
             builder.append("</option>");
@@ -170,7 +169,7 @@ public class EncryptWebConsolePlugin extends HttpServlet {
             return null;
         }
         for (final ServiceReference<CryptoService> reference : references) {
-            if (id.equals(reference.getProperty(COMPONENT_ID).toString())) {
+            if (id.equals(reference.getProperty(Constants.SERVICE_ID).toString())) {
                 return bundleContext.getService(reference);
             }
         }
