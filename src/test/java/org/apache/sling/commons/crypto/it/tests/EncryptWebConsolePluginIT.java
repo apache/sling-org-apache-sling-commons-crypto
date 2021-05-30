@@ -27,6 +27,8 @@ import java.util.Hashtable;
 import javax.inject.Inject;
 
 import org.apache.sling.commons.crypto.CryptoService;
+import org.jsoup.Connection.Method;
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Before;
@@ -129,6 +131,48 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
             .post();
         assertThat(document.title()).isEqualTo("Apache Felix Web Console - Sling Commons Crypto Encrypt");
         assertThat(document.getElementById("ciphertext").text()).isEqualTo(text);
+    }
+
+    @Test
+    public void testEncryptMissingMessage() throws IOException {
+        final ServiceReference<CryptoService> reference = registration.getReference();
+        final String id = reference.getProperty(Constants.SERVICE_ID).toString();
+        final Response response = Jsoup.connect(url)
+            .header("Authorization", String.format("Basic %s", CREDENTIALS))
+            .data("service-id", id)
+            .method(Method.POST)
+            .ignoreHttpErrors(true)
+            .execute();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusMessage()).isEqualTo("Parameter message is missing");
+    }
+
+    @Test
+    public void testEncryptMissingServiceId() throws IOException {
+        final String message = "Very secret message";
+        final Response response = Jsoup.connect(url)
+            .header("Authorization", String.format("Basic %s", CREDENTIALS))
+            .data("message", message)
+            .method(Method.POST)
+            .ignoreHttpErrors(true)
+            .execute();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusMessage()).isEqualTo("Parameter service-id is missing");
+    }
+
+    @Test
+    public void testEncryptMissingInvalidServiceId() throws IOException {
+        final String id = "invalid";
+        final String message = "Very secret message";
+        final Response response = Jsoup.connect(url)
+            .header("Authorization", String.format("Basic %s", CREDENTIALS))
+            .data("service-id", id)
+            .data("message", message)
+            .method(Method.POST)
+            .ignoreHttpErrors(true)
+            .execute();
+        assertThat(response.statusCode()).isEqualTo(404);
+        assertThat(response.statusMessage()).isEqualTo("Crypto service with service id invalid not found");
     }
 
 }
