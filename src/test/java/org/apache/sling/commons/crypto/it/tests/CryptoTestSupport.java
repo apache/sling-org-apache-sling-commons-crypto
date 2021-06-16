@@ -49,10 +49,11 @@ public abstract class CryptoTestSupport extends TestSupport {
             mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
             mavenBundle().groupId("com.google.guava").artifactId("failureaccess").versionAsInProject(),
             mavenBundle().groupId("com.googlecode.java-diff-utils").artifactId("diffutils").versionAsInProject(),
-            jacoco()
+            jacoco() // remove with Testing PaxExam 4.0
         );
     }
 
+    // remove with Testing PaxExam 4.0
     protected OptionalCompositeOption jacoco() {
         final String jacocoCommand = System.getProperty("jacoco.command");
         final VMOption option = Objects.nonNull(jacocoCommand) && !jacocoCommand.trim().isEmpty() ? vmOption(jacocoCommand) : null;
