@@ -58,6 +58,7 @@ public class JasyptRandomIvGeneratorRegistrar {
         logger.debug("activating");
         final String algorithm = configuration.algorithm();
         final RandomIvGenerator ivGenerator = new RandomIvGenerator(algorithm);
+        @SuppressWarnings("java:S1149")
         final Dictionary<String, String> properties = new Hashtable<>();
         properties.put("algorithm", algorithm);
         logger.debug("registering Random IV Generator with algorithm {}", algorithm);

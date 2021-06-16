@@ -58,6 +58,7 @@ public class JasyptRandomSaltGeneratorRegistrar {
         logger.debug("activating");
         final String algorithm = configuration.algorithm();
         final RandomSaltGenerator saltGenerator = new RandomSaltGenerator(algorithm);
+        @SuppressWarnings("java:S1149")
         final Dictionary<String, String> properties = new Hashtable<>();
         properties.put("algorithm", algorithm);
         logger.debug("registering Random Salt Generator with algorithm {}", algorithm);
