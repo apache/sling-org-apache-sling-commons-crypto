@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.apache.sling.commons.crypto.PasswordProvider;
 import org.jetbrains.annotations.NotNull;
@@ -74,7 +75,6 @@ public class FilePasswordProvider implements PasswordProvider {
     @Deactivate
     protected void deactivate() {
         logger.debug("deactivating");
-        this.configuration = null;
     }
 
     private char[] readPassword(final String path, final boolean fixPosixNewline) throws IOException {
@@ -106,6 +106,7 @@ public class FilePasswordProvider implements PasswordProvider {
 
     @Override
     public char @NotNull [] getPassword() {
+        Objects.requireNonNull(configuration, "Configuration must not be null");
         try {
             return readPassword(configuration.path(), configuration.fix_posixNewline());
         } catch (IOException e) {

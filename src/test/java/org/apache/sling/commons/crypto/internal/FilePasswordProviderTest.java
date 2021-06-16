@@ -43,6 +43,14 @@ public class FilePasswordProviderTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Test
+    public void testMissingConfiguration() {
+        final FilePasswordProvider provider = new FilePasswordProvider();
+        exception.expect(NullPointerException.class);
+        exception.expectMessage("Configuration must not be null");
+        provider.getPassword();
+    }
+
+    @Test
     public void testComponentLifecycle() throws IOException {
         final FilePasswordProvider provider = new FilePasswordProvider();
         { // activate
@@ -57,6 +65,10 @@ public class FilePasswordProviderTest {
             final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
             when(configuration.path()).thenReturn(path);
             provider.modified(configuration);
+            assertThat(provider.getPassword()).isEqualTo(PASSWORD_UTF8);
+        }
+        { // deactivate
+            provider.deactivate();
             assertThat(provider.getPassword()).isEqualTo(PASSWORD_UTF8);
         }
     }
