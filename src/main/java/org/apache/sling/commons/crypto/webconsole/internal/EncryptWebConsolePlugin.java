@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.sling.commons.crypto.internal;
+package org.apache.sling.commons.crypto.webconsole.internal;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -60,7 +60,7 @@ public class EncryptWebConsolePlugin extends HttpServlet {
 
     private static final String PARAMETER_MESSAGE = "message";
 
-    private static final String ATTRIBUTE_CIPHERTEXT = "org.apache.sling.commons.crypto.internal.EncryptWebConsolePlugin.ciphertext";
+    private static final String ATTRIBUTE_CIPHERTEXT = "org.apache.sling.commons.crypto.webconsole.internal.EncryptWebConsolePlugin.ciphertext";
 
     public EncryptWebConsolePlugin() { //
     }
