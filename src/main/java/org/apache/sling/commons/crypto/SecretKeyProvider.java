@@ -16,7 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-@Version("1.1.0")
 package org.apache.sling.commons.crypto;
 
-import org.osgi.annotation.versioning.Version;
+import javax.crypto.SecretKey;
+
+import org.jetbrains.annotations.NotNull;
+import org.osgi.annotation.versioning.ProviderType;
+
+@ProviderType
+public interface SecretKeyProvider {
+
+    @NotNull SecretKey getSecretKey();
+
+}
