@@ -76,7 +76,7 @@ public class EnvironmentVariablePasswordProviderIT extends CryptoTestSupport {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testEnvironmentVariableNotSet() throws Exception {
+    public void testEnvironmentVariableNotSet() {
         passwordProvider.getPassword();
     }
 

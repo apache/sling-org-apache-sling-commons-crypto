@@ -51,25 +51,25 @@ public class EnvironmentVariablePasswordProvider implements PasswordProvider {
     }
 
     @Activate
-    private void activate(final EnvironmentVariablePasswordProviderConfiguration configuration) {
+    protected void activate(final EnvironmentVariablePasswordProviderConfiguration configuration) {
         logger.debug("activating");
         this.configuration = configuration;
     }
 
     @Modified
-    private void modified(final EnvironmentVariablePasswordProviderConfiguration configuration) {
+    protected void modified(final EnvironmentVariablePasswordProviderConfiguration configuration) {
         logger.debug("modifying");
         this.configuration = configuration;
     }
 
     @Deactivate
-    private void deactivate() {
+    protected void deactivate() {
         logger.debug("deactivating");
-        this.configuration = null;
     }
 
     @Override
     public char @NotNull [] getPassword() {
+        Objects.requireNonNull(configuration, "Configuration must not be null");
         final String name = configuration.name();
         if (Objects.isNull(System.getenv(name))) {
             final String message = String.format("environment variable '%s' not set", name);
