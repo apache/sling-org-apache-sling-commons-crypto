@@ -46,4 +46,6 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     )
     int keyLength() default 8;
 
+    String webconsole_configurationFactory_nameHint() default "{names} {algorithm}";
+
 }
