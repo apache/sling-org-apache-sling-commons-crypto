@@ -25,6 +25,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     name = "Apache Sling Commons Crypto “PBE SecretKey Provider”",
     description = "Provides secret keys for password-based encryption (PBE)"
 )
+@SuppressWarnings("java:S100")
 @interface PBESecretKeyProviderConfiguration {
 
     @AttributeDefinition(
