@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
     ocd = SecureRandomSaltProviderConfiguration.class,
     factory = true
 )
+@SuppressWarnings("java:S6212")
 public class SecureRandomSaltProvider implements SaltProvider {
 
     private SecureRandom secureRandom;

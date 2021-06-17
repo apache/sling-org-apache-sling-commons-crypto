@@ -50,7 +50,7 @@ import org.osgi.util.tracker.ServiceTracker;
         "felix.webconsole.category=Crypto"
     }
 )
-@SuppressWarnings("java:S1989")
+@SuppressWarnings({"java:S1989", "java:S6212"})
 public class EncryptWebConsolePlugin extends HttpServlet {
 
     private BundleContext bundleContext;

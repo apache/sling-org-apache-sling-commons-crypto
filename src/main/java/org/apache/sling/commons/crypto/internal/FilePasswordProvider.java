@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
     ocd = FilePasswordProviderConfiguration.class,
     factory = true
 )
+@SuppressWarnings("java:S6212")
 public class FilePasswordProvider implements PasswordProvider {
 
     private FilePasswordProviderConfiguration configuration;

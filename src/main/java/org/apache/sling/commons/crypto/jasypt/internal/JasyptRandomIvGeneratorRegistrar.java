@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
     ocd = JasyptRandomIvGeneratorRegistrarConfiguration.class,
     factory = true
 )
+@SuppressWarnings("java:S6212")
 public class JasyptRandomIvGeneratorRegistrar {
 
     private ServiceRegistration<IvGenerator> serviceRegistration;

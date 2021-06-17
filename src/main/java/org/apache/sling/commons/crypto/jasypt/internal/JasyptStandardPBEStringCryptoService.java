@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
     ocd = JasyptStandardPBEStringCryptoServiceConfiguration.class,
     factory = true
 )
+@SuppressWarnings("java:S6212")
 public class JasyptStandardPBEStringCryptoService implements CryptoService {
 
     @Reference

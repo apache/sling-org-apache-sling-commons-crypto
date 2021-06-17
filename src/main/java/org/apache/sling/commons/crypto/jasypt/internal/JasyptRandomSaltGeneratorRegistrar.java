@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
     ocd = JasyptRandomSaltGeneratorRegistrarConfiguration.class,
     factory = true
 )
+@SuppressWarnings("java:S6212")
 public class JasyptRandomSaltGeneratorRegistrar {
 
     private ServiceRegistration<SaltGenerator> serviceRegistration;
