@@ -18,7 +18,6 @@
  */
 package org.apache.sling.commons.crypto.internal;
 
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Objects;
@@ -56,7 +55,7 @@ public class SecureRandomSaltProvider implements SaltProvider {
     }
 
     @Activate
-    protected void activate(final SecureRandomSaltProviderConfiguration configuration) throws IOException, NoSuchAlgorithmException {
+    protected void activate(final SecureRandomSaltProviderConfiguration configuration) throws NoSuchAlgorithmException {
         logger.debug("activating");
         this.configuration = configuration;
         secureRandom = SecureRandom.getInstance(configuration.algorithm());
@@ -64,7 +63,7 @@ public class SecureRandomSaltProvider implements SaltProvider {
     }
 
     @Modified
-    protected void modified(final SecureRandomSaltProviderConfiguration configuration) throws IOException, NoSuchAlgorithmException {
+    protected void modified(final SecureRandomSaltProviderConfiguration configuration) throws NoSuchAlgorithmException {
         logger.debug("modifying");
         this.configuration = configuration;
         secureRandom = SecureRandom.getInstance(configuration.algorithm());
