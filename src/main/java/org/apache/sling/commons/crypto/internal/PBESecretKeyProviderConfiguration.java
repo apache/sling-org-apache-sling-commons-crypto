@@ -52,4 +52,20 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     )
     int keyLength() default 256;
 
+    @AttributeDefinition(
+        name = "Password Provider Target",
+        description = "filter expression to target a Password Provider",
+        required = false
+    )
+    String passwordProvider_target();
+
+    @AttributeDefinition(
+        name = "Salt Provider Target",
+        description = "filter expression to target a Salt Provider",
+        required = false
+    )
+    String saltProvider_target();
+
+    String webconsole_configurationFactory_nameHint() default "{names} {algorithm}";
+
 }
