@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
     ocd = PBESecretKeyProviderConfiguration.class,
     factory = true
 )
+@SuppressWarnings("java:S3077")
 public class PBESecretKeyProvider implements SecretKeyProvider {
 
     @Reference
