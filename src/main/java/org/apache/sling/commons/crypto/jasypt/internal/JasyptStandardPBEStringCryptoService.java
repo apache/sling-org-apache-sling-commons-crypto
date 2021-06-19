@@ -55,20 +55,20 @@ import org.slf4j.LoggerFactory;
 public class JasyptStandardPBEStringCryptoService implements CryptoService {
 
     @Reference
-    private volatile PasswordProvider passwordProvider;
+    protected volatile PasswordProvider passwordProvider;
 
     @Reference
-    private volatile IvGenerator ivGenerator;
+    protected volatile IvGenerator ivGenerator;
 
     @Reference(
         cardinality = ReferenceCardinality.OPTIONAL
     )
-    private volatile Provider securityProvider;
+    protected volatile Provider securityProvider;
 
     @Reference(
         cardinality = ReferenceCardinality.OPTIONAL
     )
-    private volatile SaltGenerator saltGenerator;
+    protected volatile SaltGenerator saltGenerator;
 
     private StandardPBEStringEncryptor encryptor;
 
@@ -78,19 +78,19 @@ public class JasyptStandardPBEStringCryptoService implements CryptoService {
     }
 
     @Activate
-    private void activate(final JasyptStandardPBEStringCryptoServiceConfiguration configuration) {
+    protected void activate(final JasyptStandardPBEStringCryptoServiceConfiguration configuration) {
         logger.debug("activating");
         setupEncryptor(configuration);
     }
 
     @Modified
-    private void modified(final JasyptStandardPBEStringCryptoServiceConfiguration configuration) {
+    protected void modified(final JasyptStandardPBEStringCryptoServiceConfiguration configuration) {
         logger.debug("modifying");
         setupEncryptor(configuration);
     }
 
     @Deactivate
-    private void deactivate() {
+    protected void deactivate() {
         logger.debug("deactivating");
     }
 
