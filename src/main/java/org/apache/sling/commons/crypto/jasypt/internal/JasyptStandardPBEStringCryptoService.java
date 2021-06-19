@@ -92,7 +92,6 @@ public class JasyptStandardPBEStringCryptoService implements CryptoService {
     @Deactivate
     private void deactivate() {
         logger.debug("deactivating");
-        this.encryptor = null;
     }
 
     private void setupEncryptor(final JasyptStandardPBEStringCryptoServiceConfiguration configuration) {
