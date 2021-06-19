@@ -104,9 +104,7 @@ public class JasyptStandardPBEStringCryptoService implements CryptoService {
         // mandatory
         encryptor.setAlgorithm(algorithm);
         final IvGenerator ivGenerator = this.ivGenerator;
-        if (Objects.nonNull(ivGenerator)) {
-            encryptor.setIvGenerator(ivGenerator);
-        }
+        encryptor.setIvGenerator(ivGenerator);
         // optional
         encryptor.setKeyObtentionIterations(configuration.keyObtentionIterations());
         encryptor.setStringOutputType(configuration.stringOutputType());
