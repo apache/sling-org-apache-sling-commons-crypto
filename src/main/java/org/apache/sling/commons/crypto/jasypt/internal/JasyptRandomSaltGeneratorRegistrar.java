@@ -55,7 +55,7 @@ public class JasyptRandomSaltGeneratorRegistrar {
     }
 
     @Activate
-    private void activate(final JasyptRandomSaltGeneratorRegistrarConfiguration configuration, final BundleContext bundleContext) {
+    protected void activate(final JasyptRandomSaltGeneratorRegistrarConfiguration configuration, final BundleContext bundleContext) {
         logger.debug("activating");
         final String algorithm = configuration.algorithm();
         final RandomSaltGenerator saltGenerator = new RandomSaltGenerator(algorithm);
@@ -67,7 +67,7 @@ public class JasyptRandomSaltGeneratorRegistrar {
     }
 
     @Deactivate
-    private void deactivate() {
+    protected void deactivate() {
         logger.debug("deactivating");
         if (Objects.nonNull(serviceRegistration)) {
             serviceRegistration.unregister();
