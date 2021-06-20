@@ -18,7 +18,9 @@
  */
 package org.apache.sling.commons.crypto.internal;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -116,6 +118,35 @@ public class FilePasswordProviderTest {
         when(configuration.fix_posixNewline()).thenReturn(true);
         provider.modified(configuration);
         assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII_NEWLINE);
+    }
+
+    @Test
+    public void testPasswordFileNotReadableDuringConfigurationCheck() throws IOException {
+        final FilePasswordProvider provider = new FilePasswordProvider();
+        final String path = String.format("%s%s", System.getProperty("java.io.tmpdir"), UUID.randomUUID());
+        final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
+        when(configuration.path()).thenReturn(path);
+        when(configuration.fix_posixNewline()).thenReturn(false);
+        exception.expect(IOException.class);
+        final String message = String.format("Unable to read password file '%s'", path);
+        exception.expectMessage(message);
+        provider.activate(configuration);
+    }
+
+    @Test
+    public void testPasswordFileNotReadableAfterConfigurationCheck() throws IOException {
+        final FilePasswordProvider provider = new FilePasswordProvider();
+        final File file = File.createTempFile(UUID.randomUUID().toString(), null);
+        final String path = file.getPath();
+        final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
+        when(configuration.path()).thenReturn(path);
+        when(configuration.fix_posixNewline()).thenReturn(false);
+        provider.activate(configuration);
+        file.delete();
+        exception.expect(RuntimeException.class);
+        final String message = String.format("Unable to read password file '%s'", path);
+        exception.expectMessage(message);
+        provider.getPassword();
     }
 
 }

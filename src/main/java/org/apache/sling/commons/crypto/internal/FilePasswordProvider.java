@@ -63,14 +63,14 @@ public class FilePasswordProvider implements PasswordProvider {
     protected void activate(final FilePasswordProviderConfiguration configuration) throws IOException {
         logger.debug("activating");
         this.configuration = configuration;
-        checkConfiguration();
+        checkConfiguration(configuration);
     }
 
     @Modified
     protected void modified(final FilePasswordProviderConfiguration configuration) throws IOException {
         logger.debug("modifying");
         this.configuration = configuration;
-        checkConfiguration();
+        checkConfiguration(configuration);
     }
 
     @Deactivate
@@ -80,6 +80,7 @@ public class FilePasswordProvider implements PasswordProvider {
 
     private char[] readPassword(final String path, final boolean fixPosixNewline) throws IOException {
         final File file = new File(path);
+        checkPasswordFile(file);
         final char[] buffer = new char[(int) file.length()];
         try (final BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
             final int size = reader.read(buffer);
@@ -96,11 +97,14 @@ public class FilePasswordProvider implements PasswordProvider {
         }
     }
 
-    private void checkConfiguration() throws IOException {
-        final String path = configuration.path();
-        final File file = new File(path);
+    private void checkConfiguration(final FilePasswordProviderConfiguration configuration) throws IOException {
+        final File file = new File(configuration.path());
+        checkPasswordFile(file);
+    }
+
+    private void checkPasswordFile(final File file) throws IOException {
         if (!file.canRead()) {
-            final String message = String.format("Unable to read password file '%s'", path);
+            final String message = String.format("Unable to read password file '%s'", file.getAbsolutePath());
             throw new IOException(message);
         }
     }
@@ -112,7 +116,7 @@ public class FilePasswordProvider implements PasswordProvider {
         try {
             return readPassword(configuration.path(), configuration.fix_posixNewline());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
