@@ -90,6 +90,7 @@ public class PBESecretKeyProvider implements SecretKeyProvider {
 
     @Override
     public @NotNull SecretKey getSecretKey() {
+        final var configuration = this.configuration;
         Objects.requireNonNull(configuration, "Configuration must not be null");
         try {
             final KeySpec keySpec = new PBEKeySpec(passwordProvider.getPassword(), saltProvider.getSalt(), configuration.iterationCount(), configuration.keyLength());

@@ -70,6 +70,7 @@ public class EnvironmentVariablePasswordProvider implements PasswordProvider {
 
     @Override
     public char @NotNull [] getPassword() {
+        final var configuration = this.configuration;
         Objects.requireNonNull(configuration, "Configuration must not be null");
         final String name = configuration.name();
         if (Objects.isNull(System.getenv(name))) {

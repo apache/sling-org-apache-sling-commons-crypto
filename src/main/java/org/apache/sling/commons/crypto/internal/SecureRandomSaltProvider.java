@@ -77,6 +77,7 @@ public class SecureRandomSaltProvider implements SaltProvider {
 
     @Override
     public byte @NotNull [] getSalt() {
+        final var configuration = this.configuration;
         Objects.requireNonNull(configuration, "Configuration must not be null");
         final byte[] bytes = new byte[configuration.keyLength()];
         secureRandom.nextBytes(bytes);
