@@ -1,20 +1,12 @@
 Bundle-DocURL: https://sling.apache.org/documentation/bundles/commons-crypto.html
 
-DynamicImport-Package:\
-  javax.servlet,\
-  javax.servlet.http,\
-  org.jasypt.encryption.pbe,\
-  org.jasypt.iv,\
-  org.jasypt.registry,\
-  org.jasypt.salt
-
 Import-Package:\
-  javax.servlet;resolution:=optional,\
-  javax.servlet.http;resolution:=optional,\
-  org.jasypt.encryption.pbe;resolution:=optional,\
-  org.jasypt.iv;resolution:=optional,\
-  org.jasypt.registry;resolution:=optional,\
-  org.jasypt.salt;resolution:=optional,\
+  javax.servlet;resolution:=dynamic,\
+  javax.servlet.http;resolution:=dynamic,\
+  org.jasypt.encryption.pbe;resolution:=dynamic,\
+  org.jasypt.iv;resolution:=dynamic,\
+  org.jasypt.registry;resolution:=dynamic,\
+  org.jasypt.salt;resolution:=dynamic,\
   *
 
 Require-Capability:\
