@@ -67,14 +67,14 @@ public class EncryptWebConsolePlugin extends HttpServlet {
     }
 
     @Activate
-    private void activate(final BundleContext bundleContext) {
+    protected void activate(final BundleContext bundleContext) {
         this.bundleContext = bundleContext;
         tracker = new ServiceTracker<>(bundleContext, CryptoService.class, null);
         tracker.open();
     }
 
     @Deactivate
-    private void deactivate() {
+    protected void deactivate() {
         this.bundleContext = null;
         if (Objects.nonNull(tracker)) {
             tracker.close();
