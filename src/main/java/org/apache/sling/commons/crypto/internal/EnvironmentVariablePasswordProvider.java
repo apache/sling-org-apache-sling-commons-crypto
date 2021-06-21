@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
     ocd = EnvironmentVariablePasswordProviderConfiguration.class,
     factory = true
 )
-@SuppressWarnings("java:S6212")
+@SuppressWarnings({"java:S1117", "java:S6212"})
 public class EnvironmentVariablePasswordProvider implements PasswordProvider {
 
     private EnvironmentVariablePasswordProviderConfiguration configuration;
