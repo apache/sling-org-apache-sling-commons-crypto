@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.osgi.framework.BundleContext;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -53,7 +54,12 @@ public class EncryptWebConsolePluginTest {
     @Test
     public void testDeactivateWithNoServiceTracker() {
         final EncryptWebConsolePlugin plugin = new EncryptWebConsolePlugin();
-        plugin.deactivate();
+        try {
+            plugin.deactivate();
+        } catch (Exception e) {
+            final String message = String.format("Deactivating component should not throw exception: %s", e.getMessage());
+            fail(message);
+        }
     }
 
 }
