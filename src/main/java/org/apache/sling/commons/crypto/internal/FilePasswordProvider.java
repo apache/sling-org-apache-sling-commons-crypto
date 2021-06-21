@@ -110,6 +110,7 @@ public class FilePasswordProvider implements PasswordProvider {
     }
 
     @Override
+    @SuppressWarnings("java:S112")
     public char @NotNull [] getPassword() {
         final var configuration = this.configuration;
         Objects.requireNonNull(configuration, "Configuration must not be null");
