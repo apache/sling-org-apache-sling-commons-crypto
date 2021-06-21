@@ -14,8 +14,6 @@ Require-Capability:\
   osgi.service;filter:="(objectClass=org.apache.sling.commons.crypto.SaltProvider)";effective:=active;resolution:=optional,\
   osgi.service;filter:="(objectClass=org.jasypt.iv.IvGenerator)";effective:=active;resolution:=optional
 
--noimportjava: true
-
 -plugin:\
   org.apache.sling.bnd.plugin.headers.parameters.remove.Plugin;\
     'Require-Capability'='osgi.service;filter:="(objectClass=org.apache.sling.commons.crypto.PasswordProvider)";effective:=active',\
