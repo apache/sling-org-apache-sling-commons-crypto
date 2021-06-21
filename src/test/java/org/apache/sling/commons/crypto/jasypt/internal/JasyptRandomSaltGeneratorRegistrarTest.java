@@ -20,12 +20,19 @@ package org.apache.sling.commons.crypto.jasypt.internal;
 
 import org.junit.Test;
 
+import static org.junit.Assert.fail;
+
 public class JasyptRandomSaltGeneratorRegistrarTest {
 
     @Test
     public void testDeactivate() {
         final JasyptRandomSaltGeneratorRegistrar registrar = new JasyptRandomSaltGeneratorRegistrar();
-        registrar.deactivate();
+        try {
+            registrar.deactivate();
+        } catch (Exception e) {
+            final String message = String.format("Deactivating component should not throw exception: %s", e.getMessage());
+            fail(message);
+        }
     }
 
 }
