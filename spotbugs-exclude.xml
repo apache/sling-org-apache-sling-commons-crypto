@@ -18,4 +18,9 @@
     under the License.
 -->
 <FindBugsFilter>
+  <Match>
+    <Bug pattern="SE_BAD_FIELD"/>
+    <Class name="org.apache.sling.commons.crypto.webconsole.internal.EncryptWebConsolePlugin"/>
+    <Field name="tracker"/>
+  </Match>
 </FindBugsFilter>
