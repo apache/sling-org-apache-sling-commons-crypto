@@ -82,7 +82,7 @@ public class FilePasswordProvider implements PasswordProvider {
         final File file = new File(path);
         checkPasswordFile(file);
         final char[] buffer = new char[(int) file.length()];
-        try (final BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+        try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
             final int size = reader.read(buffer);
             final int length;
             if (fixPosixNewline && buffer[size - 1] == NEWLINE_CHARACTER) {
