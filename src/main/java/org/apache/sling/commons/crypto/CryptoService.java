@@ -33,7 +33,7 @@ public interface CryptoService {
      * @param message The message to encrypt
      * @return The encrypted message, the ciphertext
      */
-    @NotNull String encrypt(@NotNull final String message);
+    public abstract @NotNull String encrypt(@NotNull final String message);
 
     /**
      * Decrypts the given ciphertext.
@@ -41,6 +41,6 @@ public interface CryptoService {
      * @param ciphertext The encrypted message, the ciphertext to decrypt
      * @return The decrypted message
      */
-    @NotNull String decrypt(@NotNull final String ciphertext);
+    public abstract @NotNull String decrypt(@NotNull final String ciphertext);
 
 }

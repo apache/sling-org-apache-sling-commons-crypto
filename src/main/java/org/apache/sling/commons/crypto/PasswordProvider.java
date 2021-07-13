@@ -34,6 +34,6 @@ public interface PasswordProvider {
      *
      * @return The password
      */
-    char @NotNull [] getPassword();
+    public abstract char @NotNull [] getPassword();
 
 }

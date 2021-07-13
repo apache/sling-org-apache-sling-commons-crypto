@@ -36,6 +36,6 @@ public interface SecretKeyProvider {
      *
      * @return The secret key
      */
-    @NotNull SecretKey getSecretKey();
+    public abstract @NotNull SecretKey getSecretKey();
 
 }
