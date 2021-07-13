@@ -53,15 +53,15 @@ import org.osgi.util.tracker.ServiceTracker;
 @SuppressWarnings({"java:S1989", "java:S2226", "java:S6212"})
 public final class EncryptWebConsolePlugin extends HttpServlet {
 
-    private BundleContext bundleContext;
-
-    private ServiceTracker<CryptoService, CryptoService> tracker;
-
     private static final String PARAMETER_SERVICE_ID = "service-id";
 
     private static final String PARAMETER_MESSAGE = "message";
 
     private static final String ATTRIBUTE_CIPHERTEXT = "org.apache.sling.commons.crypto.webconsole.internal.EncryptWebConsolePlugin.ciphertext";
+
+    private BundleContext bundleContext;
+
+    private ServiceTracker<CryptoService, CryptoService> tracker;
 
     public EncryptWebConsolePlugin() { //
     }

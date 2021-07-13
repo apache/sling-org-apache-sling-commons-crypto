@@ -50,9 +50,9 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings({"java:S1117", "java:S6212"})
 public final class FilePasswordProvider implements PasswordProvider {
 
-    private FilePasswordProviderConfiguration configuration;
-
     private static final char NEWLINE_CHARACTER = '\n';
+
+    private FilePasswordProviderConfiguration configuration;
 
     private final Logger logger = LoggerFactory.getLogger(FilePasswordProvider.class);
 
