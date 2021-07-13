@@ -28,12 +28,16 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface CryptoService {
 
     /**
+     * Encrypts the given message.
+     *
      * @param message The message to encrypt
      * @return The encrypted message, the ciphertext
      */
     @NotNull String encrypt(@NotNull final String message);
 
     /**
+     * Decrypts the given ciphertext.
+     *
      * @param ciphertext The encrypted message, the ciphertext to decrypt
      * @return The decrypted message
      */
