@@ -22,4 +22,5 @@
   <suppress checks="MissingJavadocType" files=".*\/internal\/.*\.java"/>
   <suppress checks="MissingJavadocMethod" files=".*\/internal\/.*\.java"/>
   <suppress checks="MultipleStringLiterals" files=".*\/EncryptWebConsolePlugin\.java"/>
+  <suppress checks="ReturnCount" files=".*\/EncryptWebConsolePlugin\.java"/>
 </suppressions>
