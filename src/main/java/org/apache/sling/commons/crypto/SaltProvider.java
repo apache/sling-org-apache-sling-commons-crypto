@@ -29,6 +29,11 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface SaltProvider {
 
+    /**
+     * Provides the salt.
+     *
+     * @return The salt
+     */
     byte @NotNull [] getSalt();
 
 }

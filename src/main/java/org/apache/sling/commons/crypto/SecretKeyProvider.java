@@ -31,6 +31,11 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface SecretKeyProvider {
 
+    /**
+     * Provides the secret key.
+     *
+     * @return The secret key
+     */
     @NotNull SecretKey getSecretKey();
 
 }
