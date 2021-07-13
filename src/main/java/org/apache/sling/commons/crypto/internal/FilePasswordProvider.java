@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
     factory = true
 )
 @SuppressWarnings({"java:S1117", "java:S6212"})
-public class FilePasswordProvider implements PasswordProvider {
+public final class FilePasswordProvider implements PasswordProvider {
 
     private FilePasswordProviderConfiguration configuration;
 

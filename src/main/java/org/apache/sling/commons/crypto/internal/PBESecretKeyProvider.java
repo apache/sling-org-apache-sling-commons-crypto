@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
     factory = true
 )
 @SuppressWarnings({"java:S1117", "java:S3077"})
-public class PBESecretKeyProvider implements SecretKeyProvider {
+public final class PBESecretKeyProvider implements SecretKeyProvider {
 
     @Reference
     protected volatile PasswordProvider passwordProvider;

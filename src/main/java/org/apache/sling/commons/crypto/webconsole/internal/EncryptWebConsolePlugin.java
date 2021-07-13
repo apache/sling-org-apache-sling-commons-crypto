@@ -51,7 +51,7 @@ import org.osgi.util.tracker.ServiceTracker;
     }
 )
 @SuppressWarnings({"java:S1989", "java:S2226", "java:S6212"})
-public class EncryptWebConsolePlugin extends HttpServlet {
+public final class EncryptWebConsolePlugin extends HttpServlet {
 
     private BundleContext bundleContext;
 

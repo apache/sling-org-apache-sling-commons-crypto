@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
     factory = true
 )
 @SuppressWarnings("java:S6212")
-public class JasyptRandomIvGeneratorRegistrar {
+public final class JasyptRandomIvGeneratorRegistrar {
 
     private ServiceRegistration<IvGenerator> serviceRegistration;
 

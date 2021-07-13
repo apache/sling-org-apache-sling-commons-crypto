@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
     factory = true
 )
 @SuppressWarnings({"java:S1117", "java:S3077", "java:S6212"})
-public class JasyptStandardPBEStringCryptoService implements CryptoService {
+public final class JasyptStandardPBEStringCryptoService implements CryptoService {
 
     @Reference
     protected volatile PasswordProvider passwordProvider;

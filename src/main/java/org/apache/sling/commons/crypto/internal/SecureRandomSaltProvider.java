@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
     factory = true
 )
 @SuppressWarnings({"java:S1117", "java:S6212"})
-public class SecureRandomSaltProvider implements SaltProvider {
+public final class SecureRandomSaltProvider implements SaltProvider {
 
     private SecureRandom secureRandom;
 

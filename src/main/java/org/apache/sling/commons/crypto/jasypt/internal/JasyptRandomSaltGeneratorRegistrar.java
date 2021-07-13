@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
     factory = true
 )
 @SuppressWarnings("java:S6212")
-public class JasyptRandomSaltGeneratorRegistrar {
+public final class JasyptRandomSaltGeneratorRegistrar {
 
     private ServiceRegistration<SaltGenerator> serviceRegistration;
 
