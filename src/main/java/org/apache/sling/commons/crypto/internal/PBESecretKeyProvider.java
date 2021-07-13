@@ -55,10 +55,10 @@ import org.slf4j.LoggerFactory;
 public final class PBESecretKeyProvider implements SecretKeyProvider {
 
     @Reference
-    protected volatile PasswordProvider passwordProvider;
+    private volatile PasswordProvider passwordProvider;
 
     @Reference
-    protected volatile SaltProvider saltProvider;
+    private volatile SaltProvider saltProvider;
 
     private PBESecretKeyProviderConfiguration configuration;
 

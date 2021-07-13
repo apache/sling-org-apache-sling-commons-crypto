@@ -21,6 +21,7 @@ package org.apache.sling.commons.crypto.jasypt.internal;
 import java.security.Provider;
 import java.security.Security;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.sling.commons.crypto.PasswordProvider;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jasypt.iv.RandomIvGenerator;
@@ -38,12 +39,12 @@ public class JasyptStandardPBEStringCryptoServiceTest {
     private static final String MESSAGE = "Rudy, a Message to You";
 
     @Test
-    public void testComponentLifecycle() {
+    public void testComponentLifecycle() throws IllegalAccessException {
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         final JasyptStandardPBEStringCryptoService service = new JasyptStandardPBEStringCryptoService();
-        service.passwordProvider = passwordProvider;
-        service.ivGenerator = new RandomIvGenerator();
+        FieldUtils.writeDeclaredField(service, "passwordProvider", passwordProvider, true);
+        FieldUtils.writeDeclaredField(service, "ivGenerator", new RandomIvGenerator(), true);
         { // activate
             final JasyptStandardPBEStringCryptoServiceConfiguration configuration = mock(JasyptStandardPBEStringCryptoServiceConfiguration.class);
             when(configuration.algorithm()).thenReturn("PBEWITHHMACSHA512ANDAES_256");
@@ -75,14 +76,14 @@ public class JasyptStandardPBEStringCryptoServiceTest {
     }
 
     @Test
-    public void testProviderName() {
+    public void testProviderName() throws IllegalAccessException {
         final Provider securityProvider = new BouncyCastleProvider();
         Security.addProvider(securityProvider);
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         final JasyptStandardPBEStringCryptoService service = new JasyptStandardPBEStringCryptoService();
-        service.passwordProvider = passwordProvider;
-        service.ivGenerator = new RandomIvGenerator();
+        FieldUtils.writeDeclaredField(service, "passwordProvider", passwordProvider, true);
+        FieldUtils.writeDeclaredField(service, "ivGenerator", new RandomIvGenerator(), true);
 
         final JasyptStandardPBEStringCryptoServiceConfiguration configuration = mock(JasyptStandardPBEStringCryptoServiceConfiguration.class);
         when(configuration.algorithm()).thenReturn("PBEWITHSHA256AND128BITAES-CBC-BC");
@@ -96,14 +97,14 @@ public class JasyptStandardPBEStringCryptoServiceTest {
     }
 
     @Test
-    public void testProvider() {
+    public void testProvider() throws IllegalAccessException {
         final Provider securityProvider = new BouncyCastleProvider();
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         final JasyptStandardPBEStringCryptoService service = new JasyptStandardPBEStringCryptoService();
-        service.passwordProvider = passwordProvider;
-        service.ivGenerator = new RandomIvGenerator();
-        service.securityProvider = securityProvider;
+        FieldUtils.writeDeclaredField(service, "passwordProvider", passwordProvider, true);
+        FieldUtils.writeDeclaredField(service, "ivGenerator", new RandomIvGenerator(), true);
+        FieldUtils.writeDeclaredField(service, "securityProvider", securityProvider, true);
 
         final JasyptStandardPBEStringCryptoServiceConfiguration configuration = mock(JasyptStandardPBEStringCryptoServiceConfiguration.class);
         when(configuration.algorithm()).thenReturn("PBEWITHSHA256AND128BITAES-CBC-BC");

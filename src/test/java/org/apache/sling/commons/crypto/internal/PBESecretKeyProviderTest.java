@@ -21,6 +21,7 @@ package org.apache.sling.commons.crypto.internal;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.sling.commons.crypto.PasswordProvider;
 import org.apache.sling.commons.crypto.SaltProvider;
 import org.junit.Rule;
@@ -54,14 +55,14 @@ public class PBESecretKeyProviderTest {
     }
 
     @Test
-    public void testInvalidKeySpec() throws NoSuchAlgorithmException {
+    public void testInvalidKeySpec() throws NoSuchAlgorithmException, IllegalAccessException {
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         final SaltProvider saltProvider = mock(SaltProvider.class);
         when(saltProvider.getSalt()).thenReturn("CAFEBABECAFEDEAD".getBytes(StandardCharsets.UTF_8));
         final PBESecretKeyProvider provider = new PBESecretKeyProvider();
-        provider.passwordProvider = passwordProvider;
-        provider.saltProvider = saltProvider;
+        FieldUtils.writeDeclaredField(provider, "passwordProvider", passwordProvider, true);
+        FieldUtils.writeDeclaredField(provider, "saltProvider", saltProvider, true);
 
         final PBESecretKeyProviderConfiguration configuration = mock(PBESecretKeyProviderConfiguration.class);
         when(configuration.algorithm()).thenReturn("PBKDF2WithHmacSHA1");
@@ -74,14 +75,14 @@ public class PBESecretKeyProviderTest {
     }
 
     @Test
-    public void testComponentLifecycle() throws NoSuchAlgorithmException {
+    public void testComponentLifecycle() throws NoSuchAlgorithmException, IllegalAccessException {
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         final SaltProvider saltProvider = mock(SaltProvider.class);
         when(saltProvider.getSalt()).thenReturn("CAFEBABECAFEDEAD".getBytes(StandardCharsets.UTF_8));
         final PBESecretKeyProvider provider = new PBESecretKeyProvider();
-        provider.passwordProvider = passwordProvider;
-        provider.saltProvider = saltProvider;
+        FieldUtils.writeDeclaredField(provider, "passwordProvider", passwordProvider, true);
+        FieldUtils.writeDeclaredField(provider, "saltProvider", saltProvider, true);
         { // activate
             final PBESecretKeyProviderConfiguration configuration = mock(PBESecretKeyProviderConfiguration.class);
             when(configuration.algorithm()).thenReturn("PBKDF2WithHmacSHA1");

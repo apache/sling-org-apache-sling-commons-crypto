@@ -55,20 +55,20 @@ import org.slf4j.LoggerFactory;
 public final class JasyptStandardPBEStringCryptoService implements CryptoService {
 
     @Reference
-    protected volatile PasswordProvider passwordProvider;
+    private volatile PasswordProvider passwordProvider;
 
     @Reference
-    protected volatile IvGenerator ivGenerator;
+    private volatile IvGenerator ivGenerator;
 
     @Reference(
         cardinality = ReferenceCardinality.OPTIONAL
     )
-    protected volatile Provider securityProvider;
+    private volatile Provider securityProvider;
 
     @Reference(
         cardinality = ReferenceCardinality.OPTIONAL
     )
-    protected volatile SaltGenerator saltGenerator;
+    private volatile SaltGenerator saltGenerator;
 
     private StandardPBEStringEncryptor encryptor;
 
