@@ -34,7 +34,7 @@ import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBT
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class JasyptStandardPBEStringCryptoServiceTest {
+public class JasyptStandardPbeStringCryptoServiceTest {
 
     private static final String MESSAGE = "Rudy, a Message to You";
 
@@ -42,11 +42,11 @@ public class JasyptStandardPBEStringCryptoServiceTest {
     public void testComponentLifecycle() throws IllegalAccessException {
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
-        final JasyptStandardPBEStringCryptoService service = new JasyptStandardPBEStringCryptoService();
+        final JasyptStandardPbeStringCryptoService service = new JasyptStandardPbeStringCryptoService();
         FieldUtils.writeDeclaredField(service, "passwordProvider", passwordProvider, true);
         FieldUtils.writeDeclaredField(service, "ivGenerator", new RandomIvGenerator(), true);
         { // activate
-            final JasyptStandardPBEStringCryptoServiceConfiguration configuration = mock(JasyptStandardPBEStringCryptoServiceConfiguration.class);
+            final JasyptStandardPbeStringCryptoServiceConfiguration configuration = mock(JasyptStandardPbeStringCryptoServiceConfiguration.class);
             when(configuration.algorithm()).thenReturn("PBEWITHHMACSHA512ANDAES_256");
             when(configuration.keyObtentionIterations()).thenReturn(DEFAULT_KEY_OBTENTION_ITERATIONS);
             when(configuration.securityProviderName()).thenReturn(null);
@@ -57,7 +57,7 @@ public class JasyptStandardPBEStringCryptoServiceTest {
             assertThat(message).isEqualTo(MESSAGE);
         }
         { // modified
-            final JasyptStandardPBEStringCryptoServiceConfiguration configuration = mock(JasyptStandardPBEStringCryptoServiceConfiguration.class);
+            final JasyptStandardPbeStringCryptoServiceConfiguration configuration = mock(JasyptStandardPbeStringCryptoServiceConfiguration.class);
             when(configuration.algorithm()).thenReturn("PBEWITHHMACSHA512ANDAES_256");
             when(configuration.keyObtentionIterations()).thenReturn(1);
             when(configuration.securityProviderName()).thenReturn("");
@@ -81,11 +81,11 @@ public class JasyptStandardPBEStringCryptoServiceTest {
         Security.addProvider(securityProvider);
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
-        final JasyptStandardPBEStringCryptoService service = new JasyptStandardPBEStringCryptoService();
+        final JasyptStandardPbeStringCryptoService service = new JasyptStandardPbeStringCryptoService();
         FieldUtils.writeDeclaredField(service, "passwordProvider", passwordProvider, true);
         FieldUtils.writeDeclaredField(service, "ivGenerator", new RandomIvGenerator(), true);
 
-        final JasyptStandardPBEStringCryptoServiceConfiguration configuration = mock(JasyptStandardPBEStringCryptoServiceConfiguration.class);
+        final JasyptStandardPbeStringCryptoServiceConfiguration configuration = mock(JasyptStandardPbeStringCryptoServiceConfiguration.class);
         when(configuration.algorithm()).thenReturn("PBEWITHSHA256AND128BITAES-CBC-BC");
         when(configuration.keyObtentionIterations()).thenReturn(DEFAULT_KEY_OBTENTION_ITERATIONS);
         when(configuration.securityProviderName()).thenReturn("BC");
@@ -101,12 +101,12 @@ public class JasyptStandardPBEStringCryptoServiceTest {
         final Provider securityProvider = new BouncyCastleProvider();
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
-        final JasyptStandardPBEStringCryptoService service = new JasyptStandardPBEStringCryptoService();
+        final JasyptStandardPbeStringCryptoService service = new JasyptStandardPbeStringCryptoService();
         FieldUtils.writeDeclaredField(service, "passwordProvider", passwordProvider, true);
         FieldUtils.writeDeclaredField(service, "ivGenerator", new RandomIvGenerator(), true);
         FieldUtils.writeDeclaredField(service, "securityProvider", securityProvider, true);
 
-        final JasyptStandardPBEStringCryptoServiceConfiguration configuration = mock(JasyptStandardPBEStringCryptoServiceConfiguration.class);
+        final JasyptStandardPbeStringCryptoServiceConfiguration configuration = mock(JasyptStandardPbeStringCryptoServiceConfiguration.class);
         when(configuration.algorithm()).thenReturn("PBEWITHSHA256AND128BITAES-CBC-BC");
         when(configuration.keyObtentionIterations()).thenReturn(DEFAULT_KEY_OBTENTION_ITERATIONS);
         when(configuration.securityProviderName()).thenReturn(null);

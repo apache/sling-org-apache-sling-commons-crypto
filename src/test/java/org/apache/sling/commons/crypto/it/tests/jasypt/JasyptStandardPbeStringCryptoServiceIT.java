@@ -36,7 +36,7 @@ import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.factoryConfigurati
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class JasyptStandardPBEStringCryptoServiceIT extends JasyptCryptoTestSupport {
+public class JasyptStandardPbeStringCryptoServiceIT extends JasyptCryptoTestSupport {
 
     @Inject
     private CryptoService cryptoService;
@@ -46,7 +46,7 @@ public class JasyptStandardPBEStringCryptoServiceIT extends JasyptCryptoTestSupp
         final String path = String.format("%s/src/test/resources/password.ascii85", PathUtils.getBaseDir());
         return options(
             baseConfiguration(),
-            factoryConfiguration("org.apache.sling.commons.crypto.jasypt.internal.JasyptStandardPBEStringCryptoService")
+            factoryConfiguration("org.apache.sling.commons.crypto.jasypt.internal.JasyptStandardPbeStringCryptoService")
                 .put("algorithm", "PBEWITHHMACSHA512ANDAES_256")
                 .asOption(),
             factoryConfiguration("org.apache.sling.commons.crypto.jasypt.internal.JasyptRandomIvGeneratorRegistrar")

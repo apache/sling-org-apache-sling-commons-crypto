@@ -48,11 +48,11 @@ import org.slf4j.LoggerFactory;
     }
 )
 @Designate(
-    ocd = PBESecretKeyProviderConfiguration.class,
+    ocd = PbeSecretKeyProviderConfiguration.class,
     factory = true
 )
 @SuppressWarnings({"java:S1117", "java:S3077"})
-public final class PBESecretKeyProvider implements SecretKeyProvider {
+public final class PbeSecretKeyProvider implements SecretKeyProvider {
 
     @Reference
     private volatile PasswordProvider passwordProvider;
@@ -60,24 +60,24 @@ public final class PBESecretKeyProvider implements SecretKeyProvider {
     @Reference
     private volatile SaltProvider saltProvider;
 
-    private PBESecretKeyProviderConfiguration configuration;
+    private PbeSecretKeyProviderConfiguration configuration;
 
     private SecretKeyFactory factory;
 
-    private final Logger logger = LoggerFactory.getLogger(PBESecretKeyProvider.class);
+    private final Logger logger = LoggerFactory.getLogger(PbeSecretKeyProvider.class);
 
-    public PBESecretKeyProvider() { //
+    public PbeSecretKeyProvider() { //
     }
 
     @Activate
-    protected void activate(final PBESecretKeyProviderConfiguration configuration) throws NoSuchAlgorithmException {
+    protected void activate(final PbeSecretKeyProviderConfiguration configuration) throws NoSuchAlgorithmException {
         logger.debug("activating");
         this.configuration = configuration;
         factory = SecretKeyFactory.getInstance(configuration.algorithm());
     }
 
     @Modified
-    protected void modified(final PBESecretKeyProviderConfiguration configuration) throws NoSuchAlgorithmException {
+    protected void modified(final PbeSecretKeyProviderConfiguration configuration) throws NoSuchAlgorithmException {
         logger.debug("modifying");
         this.configuration = configuration;
         factory = SecretKeyFactory.getInstance(configuration.algorithm());

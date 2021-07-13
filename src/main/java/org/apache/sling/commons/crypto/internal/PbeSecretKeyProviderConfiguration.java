@@ -26,7 +26,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     description = "Provides secret keys for password-based encryption (PBE)"
 )
 @SuppressWarnings("java:S100")
-@interface PBESecretKeyProviderConfiguration {
+@interface PbeSecretKeyProviderConfiguration {
 
     @AttributeDefinition(
         name = "Names",

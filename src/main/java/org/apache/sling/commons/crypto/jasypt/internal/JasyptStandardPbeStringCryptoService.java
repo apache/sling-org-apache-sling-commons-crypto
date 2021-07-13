@@ -48,11 +48,11 @@ import org.slf4j.LoggerFactory;
     }
 )
 @Designate(
-    ocd = JasyptStandardPBEStringCryptoServiceConfiguration.class,
+    ocd = JasyptStandardPbeStringCryptoServiceConfiguration.class,
     factory = true
 )
 @SuppressWarnings({"java:S1117", "java:S3077", "java:S6212"})
-public final class JasyptStandardPBEStringCryptoService implements CryptoService {
+public final class JasyptStandardPbeStringCryptoService implements CryptoService {
 
     @Reference
     private volatile PasswordProvider passwordProvider;
@@ -72,19 +72,19 @@ public final class JasyptStandardPBEStringCryptoService implements CryptoService
 
     private StandardPBEStringEncryptor encryptor;
 
-    private final Logger logger = LoggerFactory.getLogger(JasyptStandardPBEStringCryptoService.class);
+    private final Logger logger = LoggerFactory.getLogger(JasyptStandardPbeStringCryptoService.class);
 
-    public JasyptStandardPBEStringCryptoService() { //
+    public JasyptStandardPbeStringCryptoService() { //
     }
 
     @Activate
-    protected void activate(final JasyptStandardPBEStringCryptoServiceConfiguration configuration) {
+    protected void activate(final JasyptStandardPbeStringCryptoServiceConfiguration configuration) {
         logger.debug("activating");
         setupEncryptor(configuration);
     }
 
     @Modified
-    protected void modified(final JasyptStandardPBEStringCryptoServiceConfiguration configuration) {
+    protected void modified(final JasyptStandardPbeStringCryptoServiceConfiguration configuration) {
         logger.debug("modifying");
         setupEncryptor(configuration);
     }
@@ -94,7 +94,7 @@ public final class JasyptStandardPBEStringCryptoService implements CryptoService
         logger.debug("deactivating");
     }
 
-    private void setupEncryptor(final JasyptStandardPBEStringCryptoServiceConfiguration configuration) {
+    private void setupEncryptor(final JasyptStandardPbeStringCryptoServiceConfiguration configuration) {
         final String algorithm = configuration.algorithm();
         final Set<?> algorithms = AlgorithmRegistry.getAllPBEAlgorithms();
         if (!algorithms.contains(algorithm)) {

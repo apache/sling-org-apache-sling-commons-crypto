@@ -31,7 +31,7 @@ import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBT
     description = "Crypto service which uses Jasypt StandardPBEStringEncryptor for encryption and decryption"
 )
 @SuppressWarnings("java:S100")
-@interface JasyptStandardPBEStringCryptoServiceConfiguration {
+@interface JasyptStandardPbeStringCryptoServiceConfiguration {
 
     @AttributeDefinition(
         name = "Names",

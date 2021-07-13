@@ -32,14 +32,14 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class PBESecretKeyProviderTest {
+public class PbeSecretKeyProviderTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void testMissingConfiguration() {
-        final PBESecretKeyProvider provider = new PBESecretKeyProvider();
+        final PbeSecretKeyProvider provider = new PbeSecretKeyProvider();
         exception.expect(NullPointerException.class);
         exception.expectMessage("Configuration must not be null");
         provider.getSecretKey();
@@ -47,8 +47,8 @@ public class PBESecretKeyProviderTest {
 
     @Test
     public void testInvalidAlgorithm() throws NoSuchAlgorithmException {
-        final PBESecretKeyProvider provider = new PBESecretKeyProvider();
-        final PBESecretKeyProviderConfiguration configuration = mock(PBESecretKeyProviderConfiguration.class);
+        final PbeSecretKeyProvider provider = new PbeSecretKeyProvider();
+        final PbeSecretKeyProviderConfiguration configuration = mock(PbeSecretKeyProviderConfiguration.class);
         when(configuration.algorithm()).thenReturn("Invalid");
         exception.expect(NoSuchAlgorithmException.class);
         provider.activate(configuration);
@@ -60,11 +60,11 @@ public class PBESecretKeyProviderTest {
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         final SaltProvider saltProvider = mock(SaltProvider.class);
         when(saltProvider.getSalt()).thenReturn("CAFEBABECAFEDEAD".getBytes(StandardCharsets.UTF_8));
-        final PBESecretKeyProvider provider = new PBESecretKeyProvider();
+        final PbeSecretKeyProvider provider = new PbeSecretKeyProvider();
         FieldUtils.writeDeclaredField(provider, "passwordProvider", passwordProvider, true);
         FieldUtils.writeDeclaredField(provider, "saltProvider", saltProvider, true);
 
-        final PBESecretKeyProviderConfiguration configuration = mock(PBESecretKeyProviderConfiguration.class);
+        final PbeSecretKeyProviderConfiguration configuration = mock(PbeSecretKeyProviderConfiguration.class);
         when(configuration.algorithm()).thenReturn("PBKDF2WithHmacSHA1");
         when(configuration.iterationCount()).thenReturn(-1);
         when(configuration.keyLength()).thenReturn(-1);
@@ -80,11 +80,11 @@ public class PBESecretKeyProviderTest {
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         final SaltProvider saltProvider = mock(SaltProvider.class);
         when(saltProvider.getSalt()).thenReturn("CAFEBABECAFEDEAD".getBytes(StandardCharsets.UTF_8));
-        final PBESecretKeyProvider provider = new PBESecretKeyProvider();
+        final PbeSecretKeyProvider provider = new PbeSecretKeyProvider();
         FieldUtils.writeDeclaredField(provider, "passwordProvider", passwordProvider, true);
         FieldUtils.writeDeclaredField(provider, "saltProvider", saltProvider, true);
         { // activate
-            final PBESecretKeyProviderConfiguration configuration = mock(PBESecretKeyProviderConfiguration.class);
+            final PbeSecretKeyProviderConfiguration configuration = mock(PbeSecretKeyProviderConfiguration.class);
             when(configuration.algorithm()).thenReturn("PBKDF2WithHmacSHA1");
             when(configuration.iterationCount()).thenReturn(1024);
             when(configuration.keyLength()).thenReturn(128);
@@ -92,7 +92,7 @@ public class PBESecretKeyProviderTest {
             assertThat(provider.getSecretKey().getAlgorithm()).isEqualTo("PBKDF2WithHmacSHA1");
         }
         { // modified
-            final PBESecretKeyProviderConfiguration configuration = mock(PBESecretKeyProviderConfiguration.class);
+            final PbeSecretKeyProviderConfiguration configuration = mock(PbeSecretKeyProviderConfiguration.class);
             when(configuration.algorithm()).thenReturn("PBKDF2WithHmacSHA256");
             when(configuration.iterationCount()).thenReturn(2048);
             when(configuration.keyLength()).thenReturn(256);

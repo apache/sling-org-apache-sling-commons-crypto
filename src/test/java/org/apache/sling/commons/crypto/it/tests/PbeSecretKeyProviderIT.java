@@ -38,7 +38,7 @@ import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.factoryConfigurati
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class PBESecretKeyProviderIT extends CryptoTestSupport {
+public class PbeSecretKeyProviderIT extends CryptoTestSupport {
 
     @Inject
     @Filter(value = "(names=messaging)")
@@ -55,7 +55,7 @@ public class PBESecretKeyProviderIT extends CryptoTestSupport {
             factoryConfiguration("org.apache.sling.commons.crypto.internal.SecureRandomSaltProvider")
                 .put("keyLength", 16)
                 .asOption(),
-            factoryConfiguration("org.apache.sling.commons.crypto.internal.PBESecretKeyProvider")
+            factoryConfiguration("org.apache.sling.commons.crypto.internal.PbeSecretKeyProvider")
                 .put("names", "messaging")
                 .put("algorithm", "PBKDF2WithHmacSHA256")
                 .asOption()
