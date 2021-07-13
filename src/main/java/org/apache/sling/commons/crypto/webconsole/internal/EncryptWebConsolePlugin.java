@@ -129,12 +129,12 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
 
     private void handleParameterMissing(final HttpServletResponse response, final String parameter) throws IOException {
         final String message = String.format("Parameter %s is missing", parameter);
-        response.sendError(400, message);
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
     }
 
     private void handleCryptoServiceNotFound(final HttpServletResponse response, final String id) throws IOException {
         final String message = String.format("Crypto service with service id %s not found", id);
-        response.sendError(404, message);
+        response.sendError(HttpServletResponse.SC_NOT_FOUND, message);
     }
 
     private @NotNull String buildForm(final ServiceReference<CryptoService>[] references) {
