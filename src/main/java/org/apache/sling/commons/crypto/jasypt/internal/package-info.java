@@ -18,9 +18,6 @@
  */
 
 /**
- * Provides the Apache Sling Commons Crypto API.
+ * Provides an implementation of the Apache Sling Commons Crypto API (Crypto Service) based on Jasypt.
  */
-@Version("1.1.0")
-package org.apache.sling.commons.crypto;
-
-import org.osgi.annotation.versioning.Version;
+package org.apache.sling.commons.crypto.jasypt.internal;

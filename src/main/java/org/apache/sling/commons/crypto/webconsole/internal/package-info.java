@@ -18,9 +18,6 @@
  */
 
 /**
- * Provides the Apache Sling Commons Crypto API.
+ * Provides a plugin for Felix Web Console to encrypt messages with available crypto services.
  */
-@Version("1.1.0")
-package org.apache.sling.commons.crypto;
-
-import org.osgi.annotation.versioning.Version;
+package org.apache.sling.commons.crypto.webconsole.internal;
