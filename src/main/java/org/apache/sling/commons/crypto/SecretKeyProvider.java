@@ -23,6 +23,11 @@ import javax.crypto.SecretKey;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
+/**
+ * Provider of secret keys for encryption and decryption.
+ *
+ * @see javax.crypto.SecretKey
+ */
 @ProviderType
 public interface SecretKeyProvider {
 

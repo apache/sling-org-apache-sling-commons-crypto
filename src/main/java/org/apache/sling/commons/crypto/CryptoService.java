@@ -21,6 +21,9 @@ package org.apache.sling.commons.crypto;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
+/**
+ * Service for encrypting messages and decrypting ciphertexts.
+ */
 @ProviderType
 public interface CryptoService {
 

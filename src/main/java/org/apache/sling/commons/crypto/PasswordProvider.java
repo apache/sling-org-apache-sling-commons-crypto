@@ -21,6 +21,11 @@ package org.apache.sling.commons.crypto;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
+/**
+ * Provider of passwords to use for example with password-based encryption (PBE).
+ *
+ * @see javax.crypto.spec.PBEKeySpec
+ */
 @ProviderType
 public interface PasswordProvider {
 
