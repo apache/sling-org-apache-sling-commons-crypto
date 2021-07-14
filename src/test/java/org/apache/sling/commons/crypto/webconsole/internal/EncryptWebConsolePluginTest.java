@@ -32,6 +32,7 @@ import org.osgi.framework.BundleContext;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class EncryptWebConsolePluginTest {
@@ -60,6 +61,45 @@ public class EncryptWebConsolePluginTest {
             final String message = String.format("Deactivating component should not throw exception: %s", e.getMessage());
             fail(message);
         }
+    }
+
+    @Test
+    public void testPostServiceIdParameterMissing() throws ServletException, IOException {
+        final BundleContext bundleContext = mock(BundleContext.class);
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter("service-id")).thenReturn(null);
+        when(request.getParameter("message")).thenReturn("");
+        final HttpServletResponse response = mock(HttpServletResponse.class);
+        final EncryptWebConsolePlugin plugin = new EncryptWebConsolePlugin();
+        plugin.activate(bundleContext);
+        plugin.doPost(request, response);
+        verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter service-id is missing");
+    }
+
+    @Test
+    public void testPostMessageParameterMissing() throws IOException, ServletException {
+        final BundleContext bundleContext = mock(BundleContext.class);
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter("service-id")).thenReturn("");
+        when(request.getParameter("message")).thenReturn(null);
+        final HttpServletResponse response = mock(HttpServletResponse.class);
+        final EncryptWebConsolePlugin plugin = new EncryptWebConsolePlugin();
+        plugin.activate(bundleContext);
+        plugin.doPost(request, response);
+        verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter message is missing");
+    }
+
+    @Test
+    public void testPostCryptoServiceNotAvailable() throws ServletException, IOException {
+        final BundleContext bundleContext = mock(BundleContext.class);
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter("service-id")).thenReturn("0");
+        when(request.getParameter("message")).thenReturn("");
+        final HttpServletResponse response = mock(HttpServletResponse.class);
+        final EncryptWebConsolePlugin plugin = new EncryptWebConsolePlugin();
+        plugin.activate(bundleContext);
+        plugin.doPost(request, response);
+        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, "Crypto service with service id 0 not found");
     }
 
 }
