@@ -55,7 +55,8 @@ public final class JasyptRandomIvGeneratorRegistrar {
     }
 
     @Activate
-    protected void activate(final JasyptRandomIvGeneratorRegistrarConfiguration configuration, final BundleContext bundleContext) {
+    @SuppressWarnings("unused")
+    private void activate(final JasyptRandomIvGeneratorRegistrarConfiguration configuration, final BundleContext bundleContext) {
         logger.debug("activating");
         final String algorithm = configuration.algorithm();
         final RandomIvGenerator ivGenerator = new RandomIvGenerator(algorithm);
@@ -67,7 +68,8 @@ public final class JasyptRandomIvGeneratorRegistrar {
     }
 
     @Deactivate
-    protected void deactivate() {
+    @SuppressWarnings("unused")
+    private void deactivate() {
         logger.debug("deactivating");
         if (Objects.nonNull(serviceRegistration)) {
             serviceRegistration.unregister();

@@ -22,12 +22,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.ops4j.pax.exam.util.PathUtils;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -53,95 +55,96 @@ public class FilePasswordProviderTest {
     }
 
     @Test
-    public void testComponentLifecycle() throws IOException {
+    public void testComponentLifecycle() throws Exception {
         final FilePasswordProvider provider = new FilePasswordProvider();
         { // activate
             final String path = String.format("%s/src/test/resources/password.ascii85", PathUtils.getBaseDir());
             final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
             when(configuration.path()).thenReturn(path);
-            provider.activate(configuration);
+            MethodUtils.invokeMethod(provider, true, "activate", configuration);
             assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII);
         }
         { // modified
             final String path = String.format("%s/src/test/resources/password.utf8", PathUtils.getBaseDir());
             final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
             when(configuration.path()).thenReturn(path);
-            provider.modified(configuration);
+            MethodUtils.invokeMethod(provider, true, "modified", configuration);
             assertThat(provider.getPassword()).isEqualTo(PASSWORD_UTF8);
         }
         { // deactivate
-            provider.deactivate();
+            MethodUtils.invokeMethod(provider, true, "deactivate");
             assertThat(provider.getPassword()).isEqualTo(PASSWORD_UTF8);
         }
     }
 
     @Test
-    public void testPasswordFile() throws IOException {
+    public void testPasswordFile() throws Exception {
         final FilePasswordProvider provider = new FilePasswordProvider();
         final String path = String.format("%s/src/test/resources/password.ascii85", PathUtils.getBaseDir());
         final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
         when(configuration.path()).thenReturn(path);
         when(configuration.fix_posixNewline()).thenReturn(false);
-        provider.activate(configuration);
+        MethodUtils.invokeMethod(provider, true, "activate", configuration);
         assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII);
         // enable fix for POSIX newline
         when(configuration.fix_posixNewline()).thenReturn(true);
-        provider.modified(configuration);
+        MethodUtils.invokeMethod(provider, true, "modified", configuration);
         assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII);
     }
 
     @Test
-    public void testPasswordFileWithNewline() throws IOException {
+    public void testPasswordFileWithNewline() throws Exception {
         final FilePasswordProvider provider = new FilePasswordProvider();
         final String path = String.format("%s/src/test/resources/password.ascii85_newline", PathUtils.getBaseDir());
         final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
         when(configuration.path()).thenReturn(path);
         when(configuration.fix_posixNewline()).thenReturn(false);
-        provider.activate(configuration);
+        MethodUtils.invokeMethod(provider, true, "activate", configuration);
         assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII_NEWLINE);
         // enable fix for POSIX newline
         when(configuration.fix_posixNewline()).thenReturn(true);
-        provider.modified(configuration);
+        MethodUtils.invokeMethod(provider, true, "modified", configuration);
         assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII);
     }
 
     @Test
-    public void testPasswordFileWithNewlines() throws IOException {
+    public void testPasswordFileWithNewlines() throws Exception {
         final FilePasswordProvider provider = new FilePasswordProvider();
         final String path = String.format("%s/src/test/resources/password.ascii85_newlines", PathUtils.getBaseDir());
         final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
         when(configuration.path()).thenReturn(path);
         when(configuration.fix_posixNewline()).thenReturn(false);
-        provider.activate(configuration);
+        MethodUtils.invokeMethod(provider, true, "activate", configuration);
         assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII_NEWLINES);
         // enable fix for POSIX newline
         when(configuration.fix_posixNewline()).thenReturn(true);
-        provider.modified(configuration);
+        MethodUtils.invokeMethod(provider, true, "modified", configuration);
         assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII_NEWLINE);
     }
 
     @Test
-    public void testPasswordFileNotReadableDuringConfigurationCheck() throws IOException {
+    public void testPasswordFileNotReadableDuringConfigurationCheck() throws Exception {
         final FilePasswordProvider provider = new FilePasswordProvider();
         final String path = String.format("%s%s", System.getProperty("java.io.tmpdir"), UUID.randomUUID());
         final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
         when(configuration.path()).thenReturn(path);
         when(configuration.fix_posixNewline()).thenReturn(false);
-        exception.expect(IOException.class);
-        final String message = String.format("Unable to read password file '%s'", path);
-        exception.expectMessage(message);
-        provider.activate(configuration);
+        exception.expectCause(instanceOf(IOException.class));
+        // no way to check message of *cause*?
+        // final String message = String.format("Unable to read password file '%s'", path);
+        // exception.expectMessage(message);
+        MethodUtils.invokeMethod(provider, true, "activate", configuration);
     }
 
     @Test
-    public void testPasswordFileNotReadableAfterConfigurationCheck() throws IOException {
+    public void testPasswordFileNotReadableAfterConfigurationCheck() throws Exception {
         final FilePasswordProvider provider = new FilePasswordProvider();
         final File file = File.createTempFile(UUID.randomUUID().toString(), null);
         final String path = file.getPath();
         final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
         when(configuration.path()).thenReturn(path);
         when(configuration.fix_posixNewline()).thenReturn(false);
-        provider.activate(configuration);
+        MethodUtils.invokeMethod(provider, true, "activate", configuration);
         file.delete();
         exception.expect(RuntimeException.class);
         final String message = String.format("Unable to read password file '%s'", path);

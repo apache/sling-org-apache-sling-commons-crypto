@@ -52,19 +52,22 @@ public final class EnvironmentVariablePasswordProvider implements PasswordProvid
     }
 
     @Activate
-    protected void activate(final EnvironmentVariablePasswordProviderConfiguration configuration) {
+    @SuppressWarnings("unused")
+    private void activate(final EnvironmentVariablePasswordProviderConfiguration configuration) {
         logger.debug("activating");
         this.configuration = configuration;
     }
 
     @Modified
-    protected void modified(final EnvironmentVariablePasswordProviderConfiguration configuration) {
+    @SuppressWarnings("unused")
+    private void modified(final EnvironmentVariablePasswordProviderConfiguration configuration) {
         logger.debug("modifying");
         this.configuration = configuration;
     }
 
     @Deactivate
-    protected void deactivate() {
+    @SuppressWarnings("unused")
+    private void deactivate() {
         logger.debug("deactivating");
     }
 

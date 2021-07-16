@@ -21,6 +21,7 @@ package org.apache.sling.commons.crypto.internal;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -43,24 +44,24 @@ public class SecureRandomSaltProviderTest {
     }
 
     @Test
-    public void testComponentLifecycle() throws IOException, NoSuchAlgorithmException {
+    public void testComponentLifecycle() throws Exception {
         final SecureRandomSaltProvider provider = new SecureRandomSaltProvider();
         { // activate
             final SecureRandomSaltProviderConfiguration configuration = mock(SecureRandomSaltProviderConfiguration.class);
             when(configuration.algorithm()).thenReturn("SHA1PRNG");
             when(configuration.keyLength()).thenReturn(8);
-            provider.activate(configuration);
+            MethodUtils.invokeMethod(provider, true, "activate", configuration);
             assertThat(provider.getSalt()).hasLength(8);
         }
         { // modified
             final SecureRandomSaltProviderConfiguration configuration = mock(SecureRandomSaltProviderConfiguration.class);
             when(configuration.algorithm()).thenReturn("SHA1PRNG");
             when(configuration.keyLength()).thenReturn(16);
-            provider.modified(configuration);
+            MethodUtils.invokeMethod(provider, true, "modified", configuration);
             assertThat(provider.getSalt()).hasLength(16);
         }
         { // deactivate
-            provider.deactivate();
+            MethodUtils.invokeMethod(provider, true, "deactivate");
             assertThat(provider.getSalt()).hasLength(16);
         }
     }

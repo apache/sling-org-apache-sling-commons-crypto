@@ -18,6 +18,7 @@
  */
 package org.apache.sling.commons.crypto.jasypt.internal;
 
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
@@ -28,7 +29,7 @@ public class JasyptRandomSaltGeneratorRegistrarTest {
     public void testDeactivate() {
         final JasyptRandomSaltGeneratorRegistrar registrar = new JasyptRandomSaltGeneratorRegistrar();
         try {
-            registrar.deactivate();
+            MethodUtils.invokeMethod(registrar, true, "deactivate");
         } catch (Exception e) {
             final String message = String.format("Deactivating component should not throw exception: %s", e.getMessage());
             fail(message);

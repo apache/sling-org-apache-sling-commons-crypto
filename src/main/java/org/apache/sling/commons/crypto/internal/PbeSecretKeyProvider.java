@@ -70,20 +70,23 @@ public final class PbeSecretKeyProvider implements SecretKeyProvider {
     }
 
     @Activate
-    protected void activate(final PbeSecretKeyProviderConfiguration configuration) throws NoSuchAlgorithmException {
+    @SuppressWarnings("unused")
+    private void activate(final PbeSecretKeyProviderConfiguration configuration) throws NoSuchAlgorithmException {
         logger.debug("activating");
         this.configuration = configuration;
         factory = SecretKeyFactory.getInstance(configuration.algorithm());
     }
 
     @Modified
-    protected void modified(final PbeSecretKeyProviderConfiguration configuration) throws NoSuchAlgorithmException {
+    @SuppressWarnings("unused")
+    private void modified(final PbeSecretKeyProviderConfiguration configuration) throws NoSuchAlgorithmException {
         logger.debug("modifying");
         this.configuration = configuration;
         factory = SecretKeyFactory.getInstance(configuration.algorithm());
     }
 
     @Deactivate
+    @SuppressWarnings("unused")
     protected void deactivate() {
         logger.debug("deactivating");
     }

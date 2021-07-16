@@ -78,19 +78,22 @@ public final class JasyptStandardPbeStringCryptoService implements CryptoService
     }
 
     @Activate
-    protected void activate(final JasyptStandardPbeStringCryptoServiceConfiguration configuration) {
+    @SuppressWarnings("unused")
+    private void activate(final JasyptStandardPbeStringCryptoServiceConfiguration configuration) {
         logger.debug("activating");
         setupEncryptor(configuration);
     }
 
     @Modified
-    protected void modified(final JasyptStandardPbeStringCryptoServiceConfiguration configuration) {
+    @SuppressWarnings("unused")
+    private void modified(final JasyptStandardPbeStringCryptoServiceConfiguration configuration) {
         logger.debug("modifying");
         setupEncryptor(configuration);
     }
 
     @Deactivate
-    protected void deactivate() {
+    @SuppressWarnings("unused")
+    private void deactivate() {
         logger.debug("deactivating");
     }
 

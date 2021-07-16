@@ -22,6 +22,7 @@ import java.security.Provider;
 import java.security.Security;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.sling.commons.crypto.PasswordProvider;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jasypt.iv.RandomIvGenerator;
@@ -39,7 +40,7 @@ public class JasyptStandardPbeStringCryptoServiceTest {
     private static final String MESSAGE = "Rudy, a Message to You";
 
     @Test
-    public void testComponentLifecycle() throws IllegalAccessException {
+    public void testComponentLifecycle() throws Exception {
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         final JasyptStandardPbeStringCryptoService service = new JasyptStandardPbeStringCryptoService();
@@ -51,7 +52,7 @@ public class JasyptStandardPbeStringCryptoServiceTest {
             when(configuration.keyObtentionIterations()).thenReturn(DEFAULT_KEY_OBTENTION_ITERATIONS);
             when(configuration.securityProviderName()).thenReturn(null);
             when(configuration.stringOutputType()).thenReturn(STRING_OUTPUT_TYPE_BASE64);
-            service.activate(configuration);
+            MethodUtils.invokeMethod(service, true, "activate", configuration);
             final String ciphertext = service.encrypt(MESSAGE);
             final String message = service.decrypt(ciphertext);
             assertThat(message).isEqualTo(MESSAGE);
@@ -62,13 +63,13 @@ public class JasyptStandardPbeStringCryptoServiceTest {
             when(configuration.keyObtentionIterations()).thenReturn(1);
             when(configuration.securityProviderName()).thenReturn("");
             when(configuration.stringOutputType()).thenReturn(STRING_OUTPUT_TYPE_HEXADECIMAL);
-            service.modified(configuration);
+            MethodUtils.invokeMethod(service, true, "modified", configuration);
             final String ciphertext = service.encrypt(MESSAGE);
             final String message = service.decrypt(ciphertext);
             assertThat(message).isEqualTo(MESSAGE);
         }
         { // deactivate
-            service.deactivate();
+            MethodUtils.invokeMethod(service, true, "deactivate");
             final String ciphertext = service.encrypt(MESSAGE);
             final String message = service.decrypt(ciphertext);
             assertThat(message).isEqualTo(MESSAGE);
@@ -76,7 +77,7 @@ public class JasyptStandardPbeStringCryptoServiceTest {
     }
 
     @Test
-    public void testProviderName() throws IllegalAccessException {
+    public void testProviderName() throws Exception {
         final Provider securityProvider = new BouncyCastleProvider();
         Security.addProvider(securityProvider);
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
@@ -90,14 +91,14 @@ public class JasyptStandardPbeStringCryptoServiceTest {
         when(configuration.keyObtentionIterations()).thenReturn(DEFAULT_KEY_OBTENTION_ITERATIONS);
         when(configuration.securityProviderName()).thenReturn("BC");
         when(configuration.stringOutputType()).thenReturn(STRING_OUTPUT_TYPE_BASE64);
-        service.activate(configuration);
+        MethodUtils.invokeMethod(service, true, "activate", configuration);
         final String ciphertext = service.encrypt(MESSAGE);
         final String message = service.decrypt(ciphertext);
         assertThat(message).isEqualTo(MESSAGE);
     }
 
     @Test
-    public void testProvider() throws IllegalAccessException {
+    public void testProvider() throws Exception {
         final Provider securityProvider = new BouncyCastleProvider();
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
@@ -111,7 +112,7 @@ public class JasyptStandardPbeStringCryptoServiceTest {
         when(configuration.keyObtentionIterations()).thenReturn(DEFAULT_KEY_OBTENTION_ITERATIONS);
         when(configuration.securityProviderName()).thenReturn(null);
         when(configuration.stringOutputType()).thenReturn(STRING_OUTPUT_TYPE_BASE64);
-        service.activate(configuration);
+        MethodUtils.invokeMethod(service, true, "activate", configuration);
         final String ciphertext = service.encrypt(MESSAGE);
         final String message = service.decrypt(ciphertext);
         assertThat(message).isEqualTo(MESSAGE);

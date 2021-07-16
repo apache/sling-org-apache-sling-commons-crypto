@@ -18,6 +18,7 @@
  */
 package org.apache.sling.commons.crypto.internal;
 
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -46,19 +47,19 @@ public class EnvironmentVariablePasswordProviderTest {
         { // activate
             final EnvironmentVariablePasswordProviderConfiguration configuration = mock(EnvironmentVariablePasswordProviderConfiguration.class);
             when(configuration.name()).thenReturn("password_ascii85");
-            provider.activate(configuration);
+            MethodUtils.invokeMethod(provider, true, "activate", configuration);
             final char[] password = withEnvironmentVariable("password_ascii85", "+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?").execute(provider::getPassword);
             assertThat(password).isEqualTo("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         }
         { // modified
             final EnvironmentVariablePasswordProviderConfiguration configuration = mock(EnvironmentVariablePasswordProviderConfiguration.class);
             when(configuration.name()).thenReturn("password_utf8");
-            provider.modified(configuration);
+            MethodUtils.invokeMethod(provider, true, "modified", configuration);
             final char[] password = withEnvironmentVariable("password_utf8", " Napøleøn Sølø (DK) 🏁🇩🇰").execute(provider::getPassword);
             assertThat(password).isEqualTo(" Napøleøn Sølø (DK) 🏁🇩🇰".toCharArray());
         }
         { // deactivate
-            provider.deactivate();
+            MethodUtils.invokeMethod(provider, true, "deactivate");
             final char[] password = withEnvironmentVariable("password_utf8", " Napøleøn Sølø (DK) 🏁🇩🇰").execute(provider::getPassword);
             assertThat(password).isEqualTo(" Napøleøn Sølø (DK) 🏁🇩🇰".toCharArray());
         }

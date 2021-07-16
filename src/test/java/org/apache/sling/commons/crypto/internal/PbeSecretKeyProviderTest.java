@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.sling.commons.crypto.PasswordProvider;
 import org.apache.sling.commons.crypto.SaltProvider;
 import org.junit.Rule;
@@ -29,6 +30,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -46,16 +48,16 @@ public class PbeSecretKeyProviderTest {
     }
 
     @Test
-    public void testInvalidAlgorithm() throws NoSuchAlgorithmException {
+    public void testInvalidAlgorithm() throws Exception {
         final PbeSecretKeyProvider provider = new PbeSecretKeyProvider();
         final PbeSecretKeyProviderConfiguration configuration = mock(PbeSecretKeyProviderConfiguration.class);
         when(configuration.algorithm()).thenReturn("Invalid");
-        exception.expect(NoSuchAlgorithmException.class);
-        provider.activate(configuration);
+        exception.expectCause(instanceOf(NoSuchAlgorithmException.class));
+        MethodUtils.invokeMethod(provider, true, "activate", configuration);
     }
 
     @Test
-    public void testInvalidKeySpec() throws NoSuchAlgorithmException, IllegalAccessException {
+    public void testInvalidKeySpec() throws Exception {
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         final SaltProvider saltProvider = mock(SaltProvider.class);
@@ -68,14 +70,14 @@ public class PbeSecretKeyProviderTest {
         when(configuration.algorithm()).thenReturn("PBKDF2WithHmacSHA1");
         when(configuration.iterationCount()).thenReturn(-1);
         when(configuration.keyLength()).thenReturn(-1);
-        provider.activate(configuration);
+        MethodUtils.invokeMethod(provider, true, "activate", configuration);
 
         exception.expect(IllegalArgumentException.class);
         provider.getSecretKey();
     }
 
     @Test
-    public void testComponentLifecycle() throws NoSuchAlgorithmException, IllegalAccessException {
+    public void testComponentLifecycle() throws Exception {
         final PasswordProvider passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         final SaltProvider saltProvider = mock(SaltProvider.class);
@@ -88,7 +90,7 @@ public class PbeSecretKeyProviderTest {
             when(configuration.algorithm()).thenReturn("PBKDF2WithHmacSHA1");
             when(configuration.iterationCount()).thenReturn(1024);
             when(configuration.keyLength()).thenReturn(128);
-            provider.activate(configuration);
+            MethodUtils.invokeMethod(provider, true, "activate", configuration);
             assertThat(provider.getSecretKey().getAlgorithm()).isEqualTo("PBKDF2WithHmacSHA1");
         }
         { // modified
@@ -96,7 +98,7 @@ public class PbeSecretKeyProviderTest {
             when(configuration.algorithm()).thenReturn("PBKDF2WithHmacSHA256");
             when(configuration.iterationCount()).thenReturn(2048);
             when(configuration.keyLength()).thenReturn(256);
-            provider.modified(configuration);
+            MethodUtils.invokeMethod(provider, true, "modified", configuration);
             assertThat(provider.getSecretKey().getAlgorithm()).isEqualTo("PBKDF2WithHmacSHA256");
         }
         { // deactivate

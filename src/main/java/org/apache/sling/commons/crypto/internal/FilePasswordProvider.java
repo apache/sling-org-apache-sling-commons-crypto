@@ -60,21 +60,24 @@ public final class FilePasswordProvider implements PasswordProvider {
     }
 
     @Activate
-    protected void activate(final FilePasswordProviderConfiguration configuration) throws IOException {
+    @SuppressWarnings("unused")
+    private void activate(final FilePasswordProviderConfiguration configuration) throws IOException {
         logger.debug("activating");
         this.configuration = configuration;
         checkConfiguration(configuration);
     }
 
     @Modified
-    protected void modified(final FilePasswordProviderConfiguration configuration) throws IOException {
+    @SuppressWarnings("unused")
+    private void modified(final FilePasswordProviderConfiguration configuration) throws IOException {
         logger.debug("modifying");
         this.configuration = configuration;
         checkConfiguration(configuration);
     }
 
     @Deactivate
-    protected void deactivate() {
+    @SuppressWarnings("unused")
+    private void deactivate() {
         logger.debug("deactivating");
     }
 
