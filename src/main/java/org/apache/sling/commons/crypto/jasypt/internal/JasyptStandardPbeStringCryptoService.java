@@ -41,6 +41,11 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Service for encrypting messages and decrypting ciphertexts using Jasypt's <code>StandardPBEStringEncryptor</code>.
+ *
+ * @see StandardPBEStringEncryptor
+ */
 @Component(
     property = {
         Constants.SERVICE_DESCRIPTION + "=Apache Sling Commons Crypto – Jasypt Standard PBE String Crypto Service",

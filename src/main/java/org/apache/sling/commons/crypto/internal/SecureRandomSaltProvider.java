@@ -33,6 +33,11 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Provider of salts created from <code>SecureRandom</code>.
+ *
+ * @see SecureRandom
+ */
 @Component(
     property = {
         Constants.SERVICE_DESCRIPTION + "=Apache Sling Commons Crypto – SecureRandom Salt Provider",

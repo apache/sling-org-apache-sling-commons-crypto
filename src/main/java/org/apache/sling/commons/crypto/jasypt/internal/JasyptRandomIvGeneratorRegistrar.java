@@ -34,6 +34,11 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Registrar for Jasypt Random IV Generator.<br>Registers a <code>RandomIvGenerator</code> as OSGi Service.
+ *
+ * @see RandomIvGenerator
+ */
 @Component(
     property = {
         Constants.SERVICE_DESCRIPTION + "=Apache Sling Commons Crypto – Jasypt Random IV Generator Registrar",

@@ -31,6 +31,11 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Provider of passwords from environment variables.
+ *
+ * @see System#getenv(String)
+ */
 @Component(
     property = {
         Constants.SERVICE_DESCRIPTION + "=Apache Sling Commons Crypto – Environment Variable Password Provider",

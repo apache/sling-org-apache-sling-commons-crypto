@@ -41,6 +41,11 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Provider of secret keys to use with password-based encryption (PBE).
+ *
+ * @see PBEKeySpec
+ */
 @Component(
     property = {
         Constants.SERVICE_DESCRIPTION + "=Apache Sling Commons Crypto – PBE SecretKey Provider",

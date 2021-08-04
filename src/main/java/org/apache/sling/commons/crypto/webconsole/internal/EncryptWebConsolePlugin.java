@@ -42,6 +42,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.util.tracker.ServiceTracker;
 
+/**
+ * Web Console plugin to encrypt messages.
+ */
 @Component(
     service = Servlet.class,
     property = {
