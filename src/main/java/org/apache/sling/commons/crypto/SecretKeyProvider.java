@@ -26,7 +26,7 @@ import org.osgi.annotation.versioning.ProviderType;
 /**
  * Provider of secret keys for encryption and decryption.
  *
- * @see javax.crypto.SecretKey
+ * @see SecretKey
  */
 @ProviderType
 public interface SecretKeyProvider {
