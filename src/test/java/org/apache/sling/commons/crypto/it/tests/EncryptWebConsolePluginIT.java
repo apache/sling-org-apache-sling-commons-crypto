@@ -57,7 +57,7 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
 
     private String url;
 
-    private CryptoService cryptoService = new ReversingCryptoService();
+    private final CryptoService cryptoService = new ReversingCryptoService();
 
     private ServiceRegistration<CryptoService> registration;
 
