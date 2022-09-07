@@ -31,7 +31,9 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.Filter;
 import org.ops4j.pax.exam.util.PathUtils;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.factoryConfiguration;
 
@@ -57,13 +59,13 @@ public class FilePasswordProviderIT extends CryptoTestSupport {
 
     @Test
     public void testPasswordProvider() {
-        assertThat(passwordProvider).isNotNull();
+        assertThat(passwordProvider, notNullValue());
     }
 
     @Test
     public void testPassword() {
         final String password = " Napøleøn Sølø (DK) \uD83C\uDFC1\uD83C\uDDE9\uD83C\uDDF0";
-        assertThat(passwordProvider.getPassword()).isEqualTo(password.toCharArray());
+        assertThat(passwordProvider.getPassword(), is(password.toCharArray()));
     }
 
 }

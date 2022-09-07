@@ -28,7 +28,8 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.junit.Test;
 import org.osgi.framework.BundleContext;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -48,7 +49,7 @@ public class EncryptWebConsolePluginTest {
         MethodUtils.invokeMethod(plugin, true, "activate", bundleContext);
         plugin.doGet(request, response);
         MethodUtils.invokeMethod(plugin, true, "deactivate");
-        assertThat(stringWriter.toString()).contains("<p>No crypto service available</p>");
+        assertThat(stringWriter.toString(), containsString("<p>No crypto service available</p>"));
     }
 
     @Test

@@ -31,7 +31,9 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.Filter;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
-import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
@@ -63,7 +65,7 @@ public class EnvironmentVariablePasswordProviderIT extends CryptoTestSupport {
 
     @Test
     public void testPasswordProvider() {
-        assertThat(passwordProvider).isNotNull();
+        assertThat(passwordProvider, notNullValue());
     }
 
     @Test
@@ -72,7 +74,7 @@ public class EnvironmentVariablePasswordProviderIT extends CryptoTestSupport {
             .execute(() ->
                 passwordProvider.getPassword()
             );
-        assertThat(password).isEqualTo(ENVIRONMENT_VARIABLE_VALUE.toCharArray());
+        assertThat(password, is(ENVIRONMENT_VARIABLE_VALUE.toCharArray()));
     }
 
     @Test(expected = RuntimeException.class)

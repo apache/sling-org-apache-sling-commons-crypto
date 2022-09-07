@@ -18,46 +18,23 @@
  */
 package org.apache.sling.commons.crypto.it.tests;
 
-import java.util.Objects;
-
+import org.apache.sling.testing.paxexam.SlingOptions;
 import org.apache.sling.testing.paxexam.TestSupport;
 import org.ops4j.pax.exam.options.ModifiableCompositeOption;
-import org.ops4j.pax.exam.options.OptionalCompositeOption;
-import org.ops4j.pax.exam.options.extra.VMOption;
 
-import static org.apache.sling.testing.paxexam.SlingOptions.paxUrlWrap;
 import static org.apache.sling.testing.paxexam.SlingOptions.scr;
 import static org.ops4j.pax.exam.CoreOptions.composite;
-import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.vmOption;
-import static org.ops4j.pax.exam.CoreOptions.when;
-import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 
 public abstract class CryptoTestSupport extends TestSupport {
 
     public ModifiableCompositeOption baseConfiguration() {
+        SlingOptions.versionResolver.setVersion("org.apache.felix", "org.apache.felix.http.jetty", "4.0.14"); // 4.0.16 is incompatible due to change in Jetty 9.4.21
         return composite(
             super.baseConfiguration(),
             // Sling Commons Crypto
             testBundle("bundle.filename"),
-            scr(),
-            // testing
-            junitBundles(),
-            paxUrlWrap(),
-            wrappedBundle(mavenBundle().groupId("com.google.truth").artifactId("truth").versionAsInProject()),
-            mavenBundle().groupId("com.google.guava").artifactId("guava").versionAsInProject(),
-            mavenBundle().groupId("com.google.guava").artifactId("failureaccess").versionAsInProject(),
-            mavenBundle().groupId("com.googlecode.java-diff-utils").artifactId("diffutils").versionAsInProject(),
-            jacoco() // remove with Testing PaxExam 4.0
+            scr()
         );
-    }
-
-    // remove with Testing PaxExam 4.0
-    protected OptionalCompositeOption jacoco() {
-        final String jacocoCommand = System.getProperty("jacoco.command");
-        final VMOption option = Objects.nonNull(jacocoCommand) && !jacocoCommand.trim().isEmpty() ? vmOption(jacocoCommand) : null;
-        return when(Objects.nonNull(option)).useOptions(option);
     }
 
 }

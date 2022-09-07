@@ -44,8 +44,9 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
-import static com.google.common.truth.Truth.assertThat;
 import static org.apache.sling.testing.paxexam.SlingOptions.webconsole;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.newConfiguration;
@@ -100,8 +101,8 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
         final Document document = Jsoup.connect(url)
             .header("Authorization", String.format("Basic %s", CREDENTIALS))
             .get();
-        assertThat(document.title()).isEqualTo("Apache Felix Web Console - Sling Commons Crypto Encrypt");
-        assertThat(document.getElementById("content").child(0).text()).isEqualTo("No crypto service available");
+        assertThat(document.title(), is("Apache Felix Web Console - Sling Commons Crypto Encrypt"));
+        assertThat(document.getElementById("content").child(0).text(), is("No crypto service available"));
     }
 
     @Test
@@ -114,8 +115,8 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
         final Document document = Jsoup.connect(url)
             .header("Authorization", String.format("Basic %s", CREDENTIALS))
             .get();
-        assertThat(document.title()).isEqualTo("Apache Felix Web Console - Sling Commons Crypto Encrypt");
-        assertThat(document.getElementById("service-id").child(0).text()).isEqualTo(label);
+        assertThat(document.title(), is("Apache Felix Web Console - Sling Commons Crypto Encrypt"));
+        assertThat(document.getElementById("service-id").child(0).text(), is(label));
     }
 
     @Test
@@ -129,8 +130,8 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
             .data("service-id", id)
             .data("message", message)
             .post();
-        assertThat(document.title()).isEqualTo("Apache Felix Web Console - Sling Commons Crypto Encrypt");
-        assertThat(document.getElementById("ciphertext").text()).isEqualTo(text);
+        assertThat(document.title(), is("Apache Felix Web Console - Sling Commons Crypto Encrypt"));
+        assertThat(document.getElementById("ciphertext").text(), is(text));
     }
 
     @Test
@@ -143,8 +144,8 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
             .method(Method.POST)
             .ignoreHttpErrors(true)
             .execute();
-        assertThat(response.statusCode()).isEqualTo(400);
-        assertThat(response.statusMessage()).isEqualTo("Parameter message is missing");
+        assertThat(response.statusCode(), is(400));
+        assertThat(response.statusMessage(), is("Parameter message is missing"));
     }
 
     @Test
@@ -156,8 +157,8 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
             .method(Method.POST)
             .ignoreHttpErrors(true)
             .execute();
-        assertThat(response.statusCode()).isEqualTo(400);
-        assertThat(response.statusMessage()).isEqualTo("Parameter service-id is missing");
+        assertThat(response.statusCode(), is(400));
+        assertThat(response.statusMessage(), is("Parameter service-id is missing"));
     }
 
     @Test
@@ -171,8 +172,8 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
             .method(Method.POST)
             .ignoreHttpErrors(true)
             .execute();
-        assertThat(response.statusCode()).isEqualTo(404);
-        assertThat(response.statusMessage()).isEqualTo("Crypto service with service id invalid not found");
+        assertThat(response.statusCode(), is(404));
+        assertThat(response.statusMessage(), is("Crypto service with service id invalid not found"));
     }
 
 }

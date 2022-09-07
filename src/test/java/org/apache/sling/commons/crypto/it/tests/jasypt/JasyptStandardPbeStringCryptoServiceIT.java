@@ -30,7 +30,9 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.PathUtils;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.factoryConfiguration;
 
@@ -63,7 +65,7 @@ public class JasyptStandardPbeStringCryptoServiceIT extends JasyptCryptoTestSupp
 
     @Test
     public void testCryptoService() {
-        assertThat(cryptoService).isNotNull();
+        assertThat(cryptoService, notNullValue());
     }
 
     @Test
@@ -71,7 +73,7 @@ public class JasyptStandardPbeStringCryptoServiceIT extends JasyptCryptoTestSupp
         final String message = "Rudy, a Message to You";
         final String encrypted = cryptoService.encrypt(message);
         final String decrypted = cryptoService.decrypt(encrypted);
-        assertThat(decrypted).isEqualTo(message);
+        assertThat(decrypted, is(message));
     }
 
 }

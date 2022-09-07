@@ -26,7 +26,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -51,18 +52,18 @@ public class SecureRandomSaltProviderTest {
             when(configuration.algorithm()).thenReturn("SHA1PRNG");
             when(configuration.keyLength()).thenReturn(8);
             MethodUtils.invokeMethod(provider, true, "activate", configuration);
-            assertThat(provider.getSalt()).hasLength(8);
+            assertThat(provider.getSalt().length, is(8));
         }
         { // modified
             final SecureRandomSaltProviderConfiguration configuration = mock(SecureRandomSaltProviderConfiguration.class);
             when(configuration.algorithm()).thenReturn("SHA1PRNG");
             when(configuration.keyLength()).thenReturn(16);
             MethodUtils.invokeMethod(provider, true, "modified", configuration);
-            assertThat(provider.getSalt()).hasLength(16);
+            assertThat(provider.getSalt().length, is(16));
         }
         { // deactivate
             MethodUtils.invokeMethod(provider, true, "deactivate");
-            assertThat(provider.getSalt()).hasLength(16);
+            assertThat(provider.getSalt().length, is(16));
         }
     }
 

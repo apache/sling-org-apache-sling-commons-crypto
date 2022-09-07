@@ -28,8 +28,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.ops4j.pax.exam.util.PathUtils;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -62,18 +63,18 @@ public class FilePasswordProviderTest {
             final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
             when(configuration.path()).thenReturn(path);
             MethodUtils.invokeMethod(provider, true, "activate", configuration);
-            assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII);
+            assertThat(provider.getPassword(), is(PASSWORD_ASCII));
         }
         { // modified
             final String path = String.format("%s/src/test/resources/password.utf8", PathUtils.getBaseDir());
             final FilePasswordProviderConfiguration configuration = mock(FilePasswordProviderConfiguration.class);
             when(configuration.path()).thenReturn(path);
             MethodUtils.invokeMethod(provider, true, "modified", configuration);
-            assertThat(provider.getPassword()).isEqualTo(PASSWORD_UTF8);
+            assertThat(provider.getPassword(), is(PASSWORD_UTF8));
         }
         { // deactivate
             MethodUtils.invokeMethod(provider, true, "deactivate");
-            assertThat(provider.getPassword()).isEqualTo(PASSWORD_UTF8);
+            assertThat(provider.getPassword(), is(PASSWORD_UTF8));
         }
     }
 
@@ -85,11 +86,11 @@ public class FilePasswordProviderTest {
         when(configuration.path()).thenReturn(path);
         when(configuration.fix_posixNewline()).thenReturn(false);
         MethodUtils.invokeMethod(provider, true, "activate", configuration);
-        assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII);
+        assertThat(provider.getPassword(), is(PASSWORD_ASCII));
         // enable fix for POSIX newline
         when(configuration.fix_posixNewline()).thenReturn(true);
         MethodUtils.invokeMethod(provider, true, "modified", configuration);
-        assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII);
+        assertThat(provider.getPassword(), is(PASSWORD_ASCII));
     }
 
     @Test
@@ -100,11 +101,11 @@ public class FilePasswordProviderTest {
         when(configuration.path()).thenReturn(path);
         when(configuration.fix_posixNewline()).thenReturn(false);
         MethodUtils.invokeMethod(provider, true, "activate", configuration);
-        assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII_NEWLINE);
+        assertThat(provider.getPassword(), is(PASSWORD_ASCII_NEWLINE));
         // enable fix for POSIX newline
         when(configuration.fix_posixNewline()).thenReturn(true);
         MethodUtils.invokeMethod(provider, true, "modified", configuration);
-        assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII);
+        assertThat(provider.getPassword(), is(PASSWORD_ASCII));
     }
 
     @Test
@@ -115,11 +116,11 @@ public class FilePasswordProviderTest {
         when(configuration.path()).thenReturn(path);
         when(configuration.fix_posixNewline()).thenReturn(false);
         MethodUtils.invokeMethod(provider, true, "activate", configuration);
-        assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII_NEWLINES);
+        assertThat(provider.getPassword(), is(PASSWORD_ASCII_NEWLINES));
         // enable fix for POSIX newline
         when(configuration.fix_posixNewline()).thenReturn(true);
         MethodUtils.invokeMethod(provider, true, "modified", configuration);
-        assertThat(provider.getPassword()).isEqualTo(PASSWORD_ASCII_NEWLINE);
+        assertThat(provider.getPassword(), is(PASSWORD_ASCII_NEWLINE));
     }
 
     @Test

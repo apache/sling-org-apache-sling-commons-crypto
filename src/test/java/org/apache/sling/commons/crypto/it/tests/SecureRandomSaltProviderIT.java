@@ -30,7 +30,9 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.Filter;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.factoryConfiguration;
 
@@ -55,14 +57,14 @@ public class SecureRandomSaltProviderIT extends CryptoTestSupport {
 
     @Test
     public void testSaltProvider() {
-        assertThat(saltProvider).isNotNull();
+        assertThat(saltProvider, notNullValue());
     }
 
     @Test
     public void testSalt() {
         final byte[] salt = saltProvider.getSalt();
-        assertThat(salt).isNotNull();
-        assertThat(salt).hasLength(32);
+        assertThat(salt, notNullValue());
+        assertThat(salt.length, is(32));
     }
 
 }

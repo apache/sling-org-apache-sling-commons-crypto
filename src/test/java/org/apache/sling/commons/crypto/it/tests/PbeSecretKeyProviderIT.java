@@ -32,7 +32,9 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.Filter;
 import org.ops4j.pax.exam.util.PathUtils;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.factoryConfiguration;
 
@@ -64,14 +66,14 @@ public class PbeSecretKeyProviderIT extends CryptoTestSupport {
 
     @Test
     public void testSecretKeyProvider() {
-        assertThat(secretKeyProvider).isNotNull();
+        assertThat(secretKeyProvider, notNullValue());
     }
 
     @Test
     public void testSecretKey() {
         final SecretKey secretKey = secretKeyProvider.getSecretKey();
-        assertThat(secretKey).isNotNull();
-        assertThat(secretKey.getAlgorithm()).isEqualTo("PBKDF2WithHmacSHA256");
+        assertThat(secretKey, notNullValue());
+        assertThat(secretKey.getAlgorithm(), is("PBKDF2WithHmacSHA256"));
     }
 
 }

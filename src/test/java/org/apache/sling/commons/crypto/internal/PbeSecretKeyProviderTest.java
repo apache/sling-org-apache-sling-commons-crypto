@@ -29,8 +29,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -91,7 +92,7 @@ public class PbeSecretKeyProviderTest {
             when(configuration.iterationCount()).thenReturn(1024);
             when(configuration.keyLength()).thenReturn(128);
             MethodUtils.invokeMethod(provider, true, "activate", configuration);
-            assertThat(provider.getSecretKey().getAlgorithm()).isEqualTo("PBKDF2WithHmacSHA1");
+            assertThat(provider.getSecretKey().getAlgorithm(), is("PBKDF2WithHmacSHA1"));
         }
         { // modified
             final PbeSecretKeyProviderConfiguration configuration = mock(PbeSecretKeyProviderConfiguration.class);
@@ -99,11 +100,11 @@ public class PbeSecretKeyProviderTest {
             when(configuration.iterationCount()).thenReturn(2048);
             when(configuration.keyLength()).thenReturn(256);
             MethodUtils.invokeMethod(provider, true, "modified", configuration);
-            assertThat(provider.getSecretKey().getAlgorithm()).isEqualTo("PBKDF2WithHmacSHA256");
+            assertThat(provider.getSecretKey().getAlgorithm(), is("PBKDF2WithHmacSHA256"));
         }
         { // deactivate
             provider.deactivate();
-            assertThat(provider.getSecretKey().getAlgorithm()).isEqualTo("PBKDF2WithHmacSHA256");
+            assertThat(provider.getSecretKey().getAlgorithm(), is("PBKDF2WithHmacSHA256"));
         }
     }
 

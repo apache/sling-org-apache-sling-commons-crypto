@@ -28,7 +28,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jasypt.iv.RandomIvGenerator;
 import org.junit.Test;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.jasypt.commons.CommonUtils.STRING_OUTPUT_TYPE_BASE64;
 import static org.jasypt.commons.CommonUtils.STRING_OUTPUT_TYPE_HEXADECIMAL;
 import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBTENTION_ITERATIONS;
@@ -55,7 +56,7 @@ public class JasyptStandardPbeStringCryptoServiceTest {
             MethodUtils.invokeMethod(service, true, "activate", configuration);
             final String ciphertext = service.encrypt(MESSAGE);
             final String message = service.decrypt(ciphertext);
-            assertThat(message).isEqualTo(MESSAGE);
+            assertThat(message, is(MESSAGE));
         }
         { // modified
             final JasyptStandardPbeStringCryptoServiceConfiguration configuration = mock(JasyptStandardPbeStringCryptoServiceConfiguration.class);
@@ -66,13 +67,13 @@ public class JasyptStandardPbeStringCryptoServiceTest {
             MethodUtils.invokeMethod(service, true, "modified", configuration);
             final String ciphertext = service.encrypt(MESSAGE);
             final String message = service.decrypt(ciphertext);
-            assertThat(message).isEqualTo(MESSAGE);
+            assertThat(message, is(MESSAGE));
         }
         { // deactivate
             MethodUtils.invokeMethod(service, true, "deactivate");
             final String ciphertext = service.encrypt(MESSAGE);
             final String message = service.decrypt(ciphertext);
-            assertThat(message).isEqualTo(MESSAGE);
+            assertThat(message, is(MESSAGE));
         }
     }
 
@@ -94,7 +95,7 @@ public class JasyptStandardPbeStringCryptoServiceTest {
         MethodUtils.invokeMethod(service, true, "activate", configuration);
         final String ciphertext = service.encrypt(MESSAGE);
         final String message = service.decrypt(ciphertext);
-        assertThat(message).isEqualTo(MESSAGE);
+        assertThat(message, is(MESSAGE));
     }
 
     @Test
@@ -115,7 +116,7 @@ public class JasyptStandardPbeStringCryptoServiceTest {
         MethodUtils.invokeMethod(service, true, "activate", configuration);
         final String ciphertext = service.encrypt(MESSAGE);
         final String message = service.decrypt(ciphertext);
-        assertThat(message).isEqualTo(MESSAGE);
+        assertThat(message, is(MESSAGE));
     }
 
 }

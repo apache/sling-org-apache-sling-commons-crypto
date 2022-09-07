@@ -24,7 +24,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
-import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -49,19 +50,19 @@ public class EnvironmentVariablePasswordProviderTest {
             when(configuration.name()).thenReturn("password_ascii85");
             MethodUtils.invokeMethod(provider, true, "activate", configuration);
             final char[] password = withEnvironmentVariable("password_ascii85", "+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?").execute(provider::getPassword);
-            assertThat(password).isEqualTo("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
+            assertThat(password, is("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray()));
         }
         { // modified
             final EnvironmentVariablePasswordProviderConfiguration configuration = mock(EnvironmentVariablePasswordProviderConfiguration.class);
             when(configuration.name()).thenReturn("password_utf8");
             MethodUtils.invokeMethod(provider, true, "modified", configuration);
             final char[] password = withEnvironmentVariable("password_utf8", " Napøleøn Sølø (DK) 🏁🇩🇰").execute(provider::getPassword);
-            assertThat(password).isEqualTo(" Napøleøn Sølø (DK) 🏁🇩🇰".toCharArray());
+            assertThat(password, is(" Napøleøn Sølø (DK) 🏁🇩🇰".toCharArray()));
         }
         { // deactivate
             MethodUtils.invokeMethod(provider, true, "deactivate");
             final char[] password = withEnvironmentVariable("password_utf8", " Napøleøn Sølø (DK) 🏁🇩🇰").execute(provider::getPassword);
-            assertThat(password).isEqualTo(" Napøleøn Sølø (DK) 🏁🇩🇰".toCharArray());
+            assertThat(password, is(" Napøleøn Sølø (DK) 🏁🇩🇰".toCharArray()));
         }
     }
 
