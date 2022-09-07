@@ -36,6 +36,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.CoreOptions.vmOptions;
 import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.factoryConfiguration;
 
@@ -59,7 +60,8 @@ public class EnvironmentVariablePasswordProviderIT extends CryptoTestSupport {
             factoryConfiguration("org.apache.sling.commons.crypto.internal.EnvironmentVariablePasswordProvider")
                 .put("names", new String[]{"environment"})
                 .put("name", ENVIRONMENT_VARIABLE_NAME)
-                .asOption()
+                .asOption(),
+            vmOptions("--add-opens", "java.base/java.util=ALL-UNNAMED")
         );
     }
 
