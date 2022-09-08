@@ -46,6 +46,7 @@ import org.osgi.framework.ServiceRegistration;
 
 import static org.apache.sling.testing.paxexam.SlingOptions.webconsole;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
@@ -145,7 +146,9 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
             .ignoreHttpErrors(true)
             .execute();
         assertThat(response.statusCode(), is(400));
-        assertThat(response.statusMessage(), is("Parameter message is missing"));
+
+        final Document document = response.parse();
+        assertThat(document.title(), endsWith("Parameter message is missing"));
     }
 
     @Test
@@ -158,7 +161,9 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
             .ignoreHttpErrors(true)
             .execute();
         assertThat(response.statusCode(), is(400));
-        assertThat(response.statusMessage(), is("Parameter service-id is missing"));
+
+        final Document document = response.parse();
+        assertThat(document.title(), endsWith("Parameter service-id is missing"));
     }
 
     @Test
@@ -173,7 +178,9 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
             .ignoreHttpErrors(true)
             .execute();
         assertThat(response.statusCode(), is(404));
-        assertThat(response.statusMessage(), is("Crypto service with service id invalid not found"));
+
+        final Document document = response.parse();
+        assertThat(document.title(), endsWith("Crypto service with service id invalid not found"));
     }
 
 }

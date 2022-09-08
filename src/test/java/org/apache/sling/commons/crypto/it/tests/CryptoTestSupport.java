@@ -18,7 +18,6 @@
  */
 package org.apache.sling.commons.crypto.it.tests;
 
-import org.apache.sling.testing.paxexam.SlingOptions;
 import org.apache.sling.testing.paxexam.TestSupport;
 import org.ops4j.pax.exam.options.ModifiableCompositeOption;
 
@@ -28,7 +27,6 @@ import static org.ops4j.pax.exam.CoreOptions.composite;
 public abstract class CryptoTestSupport extends TestSupport {
 
     public ModifiableCompositeOption baseConfiguration() {
-        SlingOptions.versionResolver.setVersion("org.apache.felix", "org.apache.felix.http.jetty", "4.0.14"); // 4.0.16 is incompatible due to change in Jetty 9.4.21
         return composite(
             super.baseConfiguration(),
             // Sling Commons Crypto
