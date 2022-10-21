@@ -19,6 +19,11 @@
 -->
 <FindBugsFilter>
   <Match>
+    <Bug pattern="REQUESTDISPATCHER_FILE_DISCLOSURE"/>
+    <Class name="org.apache.sling.commons.crypto.webconsole.internal.EncryptWebConsolePlugin"/>
+    <Method name="doPost"/>
+  </Match>
+  <Match>
     <Bug pattern="SE_BAD_FIELD"/>
     <Class name="org.apache.sling.commons.crypto.webconsole.internal.EncryptWebConsolePlugin"/>
     <Field name="tracker"/>
