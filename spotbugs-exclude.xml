@@ -23,4 +23,8 @@
     <Class name="org.apache.sling.commons.crypto.webconsole.internal.EncryptWebConsolePlugin"/>
     <Field name="tracker"/>
   </Match>
+  <Match>
+    <Bug pattern="PATH_TRAVERSAL_IN"/>
+    <Class name="org.apache.sling.commons.crypto.internal.FilePasswordProvider"/>
+  </Match>
 </FindBugsFilter>
