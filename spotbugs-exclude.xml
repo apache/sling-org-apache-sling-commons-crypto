@@ -29,6 +29,10 @@
     <Field name="tracker"/>
   </Match>
   <Match>
+    <Bug pattern="XSS_SERVLET"/>
+    <Class name="org.apache.sling.commons.crypto.webconsole.internal.EncryptWebConsolePlugin"/>
+  </Match>
+  <Match>
     <Bug pattern="PATH_TRAVERSAL_IN"/>
     <Class name="org.apache.sling.commons.crypto.internal.FilePasswordProvider"/>
   </Match>
