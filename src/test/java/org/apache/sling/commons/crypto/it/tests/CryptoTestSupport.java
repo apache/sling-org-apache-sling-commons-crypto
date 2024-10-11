@@ -23,6 +23,7 @@ import org.ops4j.pax.exam.options.ModifiableCompositeOption;
 
 import static org.apache.sling.testing.paxexam.SlingOptions.scr;
 import static org.ops4j.pax.exam.CoreOptions.composite;
+import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 
 public abstract class CryptoTestSupport extends TestSupport {
 
