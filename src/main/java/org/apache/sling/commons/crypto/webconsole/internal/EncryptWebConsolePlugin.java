@@ -41,6 +41,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.util.tracker.ServiceTracker;
+import org.owasp.encoder.Encode;
 
 /**
  * Web Console plugin to encrypt messages.
@@ -100,7 +101,7 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
 
         final String ciphertext = request.getParameter(PARAMETER_CIPHERTEXT);
         if (Objects.nonNull(ciphertext)) {
-            final String html = String.format("<p id=\"ciphertext\">Encrypted message: %s</p>", ciphertext);
+            final String html = String.format("<p id=\"ciphertext\">Encrypted message: %s</p>", Encode.forHtml(ciphertext));
             writer.println(html);
         }
     }
