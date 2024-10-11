@@ -86,8 +86,7 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
                 .put("org.osgi.service.http.port", httpPort)
                 .asOption(),
             webconsole(),
-            mavenBundle().groupId("org.jsoup").artifactId("jsoup").versionAsInProject(),
-            mavenBundle().groupId("org.owasp.encoder").artifactId("encoder").versionAsInProject()
+            mavenBundle().groupId("org.jsoup").artifactId("jsoup").versionAsInProject()
         );
     }
 

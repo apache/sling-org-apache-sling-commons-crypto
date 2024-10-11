@@ -29,6 +29,7 @@ public abstract class CryptoTestSupport extends TestSupport {
     public ModifiableCompositeOption baseConfiguration() {
         return composite(
             super.baseConfiguration(),
+            mavenBundle().groupId("org.owasp.encoder").artifactId("encoder").versionAsInProject(),
             // Sling Commons Crypto
             testBundle("bundle.filename"),
             scr()
