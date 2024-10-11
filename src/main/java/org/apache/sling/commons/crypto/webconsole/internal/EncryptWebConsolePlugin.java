@@ -20,15 +20,15 @@ package org.apache.sling.commons.crypto.webconsole.internal;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.commons.crypto.CryptoService;
@@ -60,12 +60,12 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
 
     private static final String PARAMETER_MESSAGE = "message";
 
-    private static final String ATTRIBUTE_CIPHERTEXT = "org.apache.sling.commons.crypto.webconsole.internal.EncryptWebConsolePlugin.ciphertext";
+    private static final String PARAMETER_CIPHERTEXT = "ciphertext";
 
     private BundleContext bundleContext;
 
     private ServiceTracker<CryptoService, CryptoService> tracker;
-
+    
     public EncryptWebConsolePlugin() { //
     }
 
@@ -98,19 +98,16 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
             writer.println("<p>No crypto service available</p>");
         }
 
-        final String forwardRequestUri = (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
-        if (Objects.nonNull(forwardRequestUri) && forwardRequestUri.equals(request.getRequestURI())) {
-            final String ciphertext = (String) request.getAttribute(ATTRIBUTE_CIPHERTEXT);
-            if (Objects.nonNull(ciphertext)) {
-                final String html = String.format("<p id=\"ciphertext\">Encrypted message: %s</p>", ciphertext);
-                writer.println(html);
-            }
+        final String ciphertext = request.getParameter(PARAMETER_CIPHERTEXT);
+        if (Objects.nonNull(ciphertext)) {
+            final String html = String.format("<p id=\"ciphertext\">Encrypted message: %s</p>", ciphertext);
+            writer.println(html);
         }
     }
 
     @Override
     protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
-        request.removeAttribute(ATTRIBUTE_CIPHERTEXT);
+        
         final String serviceId = request.getParameter(PARAMETER_SERVICE_ID);
         final String message = request.getParameter(PARAMETER_MESSAGE); // do NOT log SECRET message
         if (Objects.isNull(serviceId)) {
@@ -127,9 +124,9 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
             return;
         }
         final String ciphertext = cryptoService.encrypt(message);
-        request.setAttribute(ATTRIBUTE_CIPHERTEXT, ciphertext);
-        final GetHttpServletRequestWrapper wrapper = new GetHttpServletRequestWrapper(request);
-        request.getRequestDispatcher(request.getRequestURI()).forward(wrapper, response);
+        
+        final String location = request.getRequestURL().append("?").append(PARAMETER_CIPHERTEXT).append("=").append(URLEncoder.encode(ciphertext, StandardCharsets.UTF_8)).toString();
+        response.sendRedirect(location);
     }
 
     private void handleParameterMissing(final HttpServletResponse response, final String parameter) throws IOException {
@@ -181,18 +178,4 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
         }
         return null;
     }
-
-    private static class GetHttpServletRequestWrapper extends HttpServletRequestWrapper {
-
-        GetHttpServletRequestWrapper(final HttpServletRequest request) {
-            super(request);
-        }
-
-        @Override
-        public String getMethod() {
-            return "GET";
-        }
-
-    }
-
 }
