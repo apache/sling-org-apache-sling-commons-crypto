@@ -129,7 +129,11 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
         final String ciphertext = cryptoService.encrypt(message);
         request.setAttribute(ATTRIBUTE_CIPHERTEXT, ciphertext);
         final GetHttpServletRequestWrapper wrapper = new GetHttpServletRequestWrapper(request);
-        request.getRequestDispatcher(request.getRequestURI()).forward(wrapper, response);
+        if (request.getContextPath().isEmpty()) { // Web Console < 4.9.0
+            request.getRequestDispatcher(request.getRequestURI()).forward(wrapper, response);
+        } else { // Web Console >= 4.9.0
+            request.getRequestDispatcher(request.getPathInfo()).forward(wrapper, response);
+        }
     }
 
     private void handleParameterMissing(final HttpServletResponse response, final String parameter) throws IOException {
