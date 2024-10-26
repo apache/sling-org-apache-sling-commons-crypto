@@ -91,23 +91,6 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
         );
     }
 
-    @Configuration
-    public Option[] configurationWithNewJettyAndWebconsole() {
-        SlingOptions.versionResolver.setVersion("org.apache.felix", "org.apache.felix.http.jetty", "5.1.26");
-        SlingOptions.versionResolver.setVersion("org.apache.felix", "org.apache.felix.http.servlet-api", "3.0.0");
-        SlingOptions.versionResolver.setVersion("org.apache.felix", "org.apache.felix.webconsole", "5.0.8");
-        final int httpPort = findFreePort();
-        return options(
-            baseConfiguration(),
-            newConfiguration("org.apache.felix.http")
-                .put("org.osgi.service.http.port", httpPort)
-                .asOption(),
-            webconsole(),
-            mavenBundle().groupId("org.jsoup").artifactId("jsoup").versionAsInProject(),
-            mavenBundle().groupId("org.owasp.encoder").artifactId("encoder").version("1.3.1")
-        );
-    }
-
     @Before
     public void setUp() throws Exception {
         url = String.format("http://localhost:%s/system/console/sling-commons-crypto-encrypt", httpPort());
