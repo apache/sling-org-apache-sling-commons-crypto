@@ -27,6 +27,7 @@ import java.util.Hashtable;
 import javax.inject.Inject;
 
 import org.apache.sling.commons.crypto.CryptoService;
+import org.apache.sling.testing.paxexam.SlingOptions;
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -87,6 +88,23 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
                 .asOption(),
             webconsole(),
             mavenBundle().groupId("org.jsoup").artifactId("jsoup").versionAsInProject()
+        );
+    }
+
+    @Configuration
+    public Option[] configurationWithNewJettyAndWebconsole() {
+        SlingOptions.versionResolver.setVersion("org.apache.felix", "org.apache.felix.http.jetty", "5.1.26");
+        SlingOptions.versionResolver.setVersion("org.apache.felix", "org.apache.felix.http.servlet-api", "3.0.0");
+        SlingOptions.versionResolver.setVersion("org.apache.felix", "org.apache.felix.webconsole", "5.0.8");
+        final int httpPort = findFreePort();
+        return options(
+            baseConfiguration(),
+            newConfiguration("org.apache.felix.http")
+                .put("org.osgi.service.http.port", httpPort)
+                .asOption(),
+            webconsole(),
+            mavenBundle().groupId("org.jsoup").artifactId("jsoup").versionAsInProject(),
+            mavenBundle().groupId("org.owasp.encoder").artifactId("encoder").version("1.3.1")
         );
     }
 
