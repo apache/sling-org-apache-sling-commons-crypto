@@ -27,7 +27,6 @@ import java.util.Hashtable;
 import javax.inject.Inject;
 
 import org.apache.sling.commons.crypto.CryptoService;
-import org.apache.sling.testing.paxexam.SlingOptions;
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -46,9 +45,9 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
 import static org.apache.sling.testing.paxexam.SlingOptions.webconsole;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.is;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.newConfiguration;
