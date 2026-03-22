@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache.sling</groupId>
     <artifactId>sling-bundle-parent</artifactId>
-    <version>60</version>
+    <version>66</version>
     <relativePath />
   </parent>
 
@@ -36,7 +36,7 @@
 
   <properties>
     <project.build.outputTimestamp>2021-10-06T12:33:19Z</project.build.outputTimestamp>
-    <sling.java.version>11</sling.java.version>
+    <sling.java.version>17</sling.java.version>
     <javadoc.excludePackageNames />
     <org.ops4j.pax.exam.version>4.14.0</org.ops4j.pax.exam.version>
   </properties>
@@ -293,6 +293,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+      <version>1.7.0</version>
       <scope>provided</scope>
     </dependency>
     <!-- testing -->
