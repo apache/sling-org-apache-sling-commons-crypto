@@ -32,12 +32,12 @@ public class EncryptWebConsolePluginHttpWhiteboardIT extends EncryptWebConsolePl
 
     @Configuration
     public Option[] configuration() {
-        SlingOptions.versionResolver.setVersion("org.apache.felix", "org.apache.felix.http.jetty", "5.1.26");
-        SlingOptions.versionResolver.setVersion("org.apache.felix", "org.apache.felix.http.servlet-api", "3.0.0");
-        SlingOptions.versionResolver.setVersion("org.apache.felix", "org.apache.felix.webconsole", "5.0.8");
+        SlingOptions.versionResolver.setVersionFromProject("org.apache.felix", "org.apache.felix.http.jetty");
+        SlingOptions.versionResolver.setVersionFromProject("org.apache.felix", "org.apache.felix.http.servlet-api");
+        SlingOptions.versionResolver.setVersionFromProject("org.apache.felix", "org.apache.felix.webconsole");
         return combine(
             super.configuration(),
-            mavenBundle().groupId("org.owasp.encoder").artifactId("encoder").version("1.3.1")
+            mavenBundle().groupId("org.owasp.encoder").artifactId("encoder").versionAsInProject()
         );
     }
 
