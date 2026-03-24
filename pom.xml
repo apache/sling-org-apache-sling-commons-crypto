@@ -29,13 +29,13 @@
   </parent>
 
   <artifactId>org.apache.sling.commons.crypto</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>1.2.0</version>
 
   <name>Apache Sling Commons Crypto</name>
   <description>Apache Sling Commons Crypto</description>
 
   <properties>
-    <project.build.outputTimestamp>2021-10-06T12:33:19Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2026-03-24T05:58:33Z</project.build.outputTimestamp>
     <sling.java.version>17</sling.java.version>
     <javadoc.excludePackageNames />
     <org.ops4j.pax.exam.version>4.14.0</org.ops4j.pax.exam.version>
@@ -45,7 +45,7 @@
     <connection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-commons-crypto.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-commons-crypto.git</developerConnection>
     <url>https://github.com/apache/sling-org-apache-sling-commons-crypto.git</url>
-    <tag>HEAD</tag>
+    <tag>org.apache.sling.commons.crypto-1.2.0</tag>
   </scm>
 
   <profiles>
