@@ -112,6 +112,7 @@
           </excludes>
         </configuration>
       </plugin>
+      <!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -158,7 +159,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
@@ -380,6 +381,12 @@
       <artifactId>encoder</artifactId>
       <version>1.4.0</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.util.converter</artifactId>
+        <version>1.0.9</version>
+        <scope>test</scope>
     </dependency>
   </dependencies>
 

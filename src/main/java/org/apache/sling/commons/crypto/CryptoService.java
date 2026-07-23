@@ -32,6 +32,7 @@ public interface CryptoService {
      *
      * @param message The message to encrypt
      * @return The encrypted message, the ciphertext
+     * @throws IllegalStateException if the message cannot be encrypted for some reason
      */
     public abstract @NotNull String encrypt(@NotNull final String message);
 
@@ -40,6 +41,7 @@ public interface CryptoService {
      *
      * @param ciphertext The encrypted message, the ciphertext to decrypt
      * @return The decrypted message
+     * @throws IllegalArgumentException if the message cannot be decrypted for some reason
      */
     public abstract @NotNull String decrypt(@NotNull final String ciphertext);
 

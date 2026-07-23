@@ -32,7 +32,7 @@ public interface SaltProvider {
     /**
      * Provides the salt.
      *
-     * @return The salt
+     * @return The salt (always a different value for each call)
      */
     public abstract byte @NotNull [] getSalt();
 
