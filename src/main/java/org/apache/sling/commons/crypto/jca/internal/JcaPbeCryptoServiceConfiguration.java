@@ -23,7 +23,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 @ObjectClassDefinition(
     name = "Apache Sling Commons Crypto JCA PBE Crypto Service",
-    description = "Crypto service which uses Java Crypto Architecture (JCA) with a password based key derivation function (KDF) and a symmetric cipher for encryption and decryption"
+    description = "Crypto service which uses Java Crypto Architecture (JCA) with a password based key derivation function (KDF) based on SecretKeyFactory parameterized with PBEKeySpec and a symmetric cipher for encryption and decryption"
 )
 @interface JcaPbeCryptoServiceConfiguration {
 
@@ -36,21 +36,22 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
     @AttributeDefinition(
         name = "Secret Key Factory Algorithm",
-        description = "Algorithm to use for generating the secret key from the password. Standard names outlined in https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#secretkeyfactory-algorithm-names"
+        description = "Algorithm to use for generating the secret key from the password. Standard names outlined in https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#secretkeyfactory-algorithm-names. Must support key spec of type \"javax.crypto.spec.PBEKeySpec\"."
     )
-    String secretKeyFactory() default "PBKDF2WithHmacSHA512";
+    String secretKeyFactoryAlgorithm() default "PBKDF2WithHmacSHA512";
 
     @AttributeDefinition(
         name = "Cipher Algorithm",
-        description = "Symmetric cypher algorithm to use for encryption and decryption in the form \"<algorithm>/<mode>/<padding>\". Standard names outlined in https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#cipher-algorithm-names. Include mode and padding specifiers as well (otherwise a non suitable default may be picked)."
+        description = "Symmetric cypher algorithm to use for encryption and decryption in the form \"<algorithm>/<mode>/<padding>\". Standard names outlined in https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#cipher-algorithm-names. Include mode and padding specifiers as well (otherwise a non suitable default may be picked). If a PBE algorithm (format \"PBEWith<digest>And<encryption>\" or \"PBEWith<prf>And<encryption>\" is used for the secret key factory the same algorithm must be used here."
     )
     String cipherAlgorithm() default "AES/GCM/NoPadding";
 
     @AttributeDefinition(
         name = "Secure Random Algorithm",
-        description = "Algorithm to use for generating secure random numbers. Standard names outlined in https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#securerandom-number-generation-algorithms"
+        description = "Algorithm to use for generating secure random numbers. Standard names outlined in https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#securerandom-number-generation-algorithms. Leave empty to use the default SecureRandom implementation provided by the JVM.",
+        required = false
     )
-    String secureRandomAlgorithm() default "NativePRNGBlocking";
+    String secureRandomAlgorithm() default "";
 
     @AttributeDefinition(
         name = "PBE Key Iteration Count",
@@ -61,7 +62,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
     @AttributeDefinition(
         name = "PBE Key Length (bits)",
-        description = "Length of the key to be derived from the password as defined in the PBE algorithm. The key length should be appropriate for the chosen symmetric cipher algorithm."
+        description = "Length of the key to be derived from the password as defined in the PBE algorithm. The key length should be appropriate for the chosen symmetric cipher algorithm. Ignored for PBE algorithms which implicitly contain the key length already."
     )
     int keyLengthBits() default 256;
 
@@ -73,11 +74,18 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     String securityProviderName() default "SunJCE";
 
     @AttributeDefinition(
+        name = "Password Provider Target",
+        description = "Filter expression to target a Password Provider (usually by name with a pattern like \"(names=*)\"). If not specified, the first available Password Provider will be used.",
+        required = false
+    )
+    String passwordProvider_target();
+
+    @AttributeDefinition(
         name = "Service Ranking",
         description = "OSGi service.ranking value used to prioritize this service when multiple implementations are available."
     )
     int service_ranking() default 0;
 
-    String webconsole_configurationFactory_nameHint() default "{names} {secretKeyFactory} {cipherAlgorithm}";
+    String webconsole_configurationFactory_nameHint() default "{names} PBKDF: {secretKeyFactory}, Cipher: {cipherAlgorithm}";
 
 }

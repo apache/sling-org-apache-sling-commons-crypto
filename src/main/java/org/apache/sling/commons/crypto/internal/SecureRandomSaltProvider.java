@@ -65,22 +65,11 @@ public final class SecureRandomSaltProvider implements SaltProvider {
     private void activate(final SecureRandomSaltProviderConfiguration configuration) throws NoSuchAlgorithmException {
         logger.debug("activating");
         this.configuration = configuration;
-        secureRandom = SecureRandom.getInstance(configuration.algorithm());
-
-    }
-
-    @Modified
-    @SuppressWarnings("unused")
-    private void modified(final SecureRandomSaltProviderConfiguration configuration) throws NoSuchAlgorithmException {
-        logger.debug("modifying");
-        this.configuration = configuration;
-        secureRandom = SecureRandom.getInstance(configuration.algorithm());
-    }
-
-    @Deactivate
-    @SuppressWarnings("unused")
-    private void deactivate() {
-        logger.debug("deactivating");
+        if (configuration.algorithm().isBlank()) {
+            secureRandom = new SecureRandom();
+        } else {
+            secureRandom = SecureRandom.getInstance(configuration.algorithm());
+        }
     }
 
     @Override

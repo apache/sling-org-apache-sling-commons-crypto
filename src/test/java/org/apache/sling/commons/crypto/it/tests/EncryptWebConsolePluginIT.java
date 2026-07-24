@@ -18,11 +18,20 @@
  */
 package org.apache.sling.commons.crypto.it.tests;
 
+import static org.apache.sling.testing.paxexam.SlingOptions.webconsole;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.newConfiguration;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -43,14 +52,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
-
-import static org.apache.sling.testing.paxexam.SlingOptions.webconsole;
-import static org.hamcrest.CoreMatchers.endsWith;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.newConfiguration;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerMethod.class)
@@ -110,9 +111,10 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
     public void testGetFormCryptoServiceAvailable() throws IOException {
         final ServiceReference<CryptoService> reference = registration.getReference();
         final String id = reference.getProperty(Constants.SERVICE_ID).toString();
+        final String description = Objects.toString(reference.getProperty(Constants.SERVICE_DESCRIPTION), "");
         final String[] names = (String[]) reference.getProperty("names");
-        final String algorithm = reference.getProperty("algorithm").toString();
-        final String label = String.format("Service id %s, names: %s, algorithm: %s", id, Arrays.toString(names), algorithm);
+        final String algorithm = Objects.toString(reference.getProperty("algorithm"), "unknown");
+        final String label = String.format("Service id %s (%s), names: %s, algorithm: %s", id, description, Arrays.toString(names), algorithm);
         final Document document = Jsoup.connect(url)
             .header("Authorization", String.format("Basic %s", CREDENTIALS))
             .get();

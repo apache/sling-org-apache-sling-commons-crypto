@@ -158,9 +158,10 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
         builder.append("<select id=\"service-id\" name=\"service-id\">");
         for (final ServiceReference<CryptoService> reference : references) {
             final String id = reference.getProperty(Constants.SERVICE_ID).toString();
+            final String description = Objects.toString(reference.getProperty(Constants.SERVICE_DESCRIPTION), "");
             final String[] names = (String[]) reference.getProperty("names");
-            final String algorithm = reference.getProperty("algorithm").toString();
-            final String label = String.format("Service id %s, names: %s, algorithm: %s", id, Arrays.toString(names), algorithm);
+            final String algorithm = Objects.toString(reference.getProperty("algorithm"), "unknown");
+            final String label = String.format("Service id %s (%s), names: %s, algorithm: %s", id, description, Arrays.toString(names), algorithm);
             builder.append("<option value=\"").append(id).append("\">");
             builder.append(label);
             builder.append("</option>");

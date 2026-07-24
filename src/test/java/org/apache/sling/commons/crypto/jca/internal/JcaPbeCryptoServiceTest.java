@@ -18,8 +18,9 @@
  */
 package org.apache.sling.commons.crypto.jca.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,46 +33,89 @@ import java.security.spec.InvalidParameterSpecException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import javax.crypto.NoSuchPaddingException;
 
 import org.apache.sling.commons.crypto.PasswordProvider;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.Parameter;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.osgi.util.converter.Converters;
 
-public class JcaPbeCryptoServiceTest {
+@ParameterizedClass(name="{index} => {0}")
+@MethodSource("provideAlgorithms")
+class JcaPbeCryptoServiceTest {
+
+    // returns a stream of each 4 parameters: name, providerName, secretKeyFactoryAlgorithm, cipherAlgorithm
+    private static Stream<Arguments> provideAlgorithms() {
+        return Stream.of(
+          Arguments.of("Default (PBKDF2 with AES cipher)", "", "", ""), // empty means default algorithms
+          Arguments.of("PBES1 (PBEWithMD5AndDES)", "", "PBEWithMD5AndDES", "PBEWithMD5AndDES"),
+          Arguments.of("PBES2 (PBEWithHmacSHA256AndAES_128)", "", "PBEWithHmacSHA256AndAES_128", "PBEWithHmacSHA256AndAES_128"),
+          Arguments.of("BC: (PBKDF2 with ChaCha20)", "BC", "PBKDF2", "CHACHA20-POLY1305")
+          // Arguments.of("BC: SCRIPT with BLOWFISH", "BC", "SCRYPT", "BLOWFISH"), fails as requiring ScryptKeySpec
+          // Arguments.of("BC: ARGON2 with BLOWFISH", "BC", "ARGON2", "BLOWFISH"), fails as requiring Argon2KeySpec
+        );
+    }
+
+    @Parameter(0)
+    String name;
+
+    @Parameter(1)
+    String providerName;
+
+    @Parameter(2)
+    String secretKeyFactoryAlgorithm;
+    
+    @Parameter(3)
+    String cipherAlgorithm;
 
     private static final String MESSAGE = "Rudy, a Message to You üøoøøt";
 
     private PasswordProvider passwordProvider;
     private byte[] salt;
+    private JcaPbeCryptoServiceConfiguration configuration;
+    private JcaPbeCryptoService service;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidParameterSpecException, InvalidKeySpecException {
         passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         salt = new byte[16];
         Random random = new Random();
         random.nextBytes(salt);
+        Map<String, Object> properties = new HashMap<>();
+        if (!providerName.isEmpty()) {
+            properties.put("securityProviderName", providerName);
+            if (providerName.equals("BC") && Security.getProvider("BC") == null) {
+                Security.addProvider(new BouncyCastleProvider());
+            }
+        }
+        if (!secretKeyFactoryAlgorithm.isEmpty()) {
+            properties.put("secretKeyFactoryAlgorithm", secretKeyFactoryAlgorithm);
+        }
+        if (!cipherAlgorithm.isEmpty()) {
+            properties.put("cipherAlgorithm", cipherAlgorithm);
+        }
+        configuration = Converters.standardConverter().convert(properties).to(JcaPbeCryptoServiceConfiguration.class);
+        service = new JcaPbeCryptoService(configuration, salt, passwordProvider);
     }
 
     @Test
-    public void testCryptoRoundtrip() throws Exception {
-        Map<String, Object> properties = new HashMap<>();
-        JcaPbeCryptoServiceConfiguration configuration = Converters.standardConverter().convert(properties).to(JcaPbeCryptoServiceConfiguration.class);
-        final JcaPbeCryptoService service = new JcaPbeCryptoService(configuration, salt, passwordProvider);
+    void testCryptoRoundtrip() throws Exception {
         final String ciphertext = service.encrypt(MESSAGE);
         final String message = service.decrypt(ciphertext);
         assertEquals(MESSAGE, message);
     }
 
     @Test
-    public void testCryptoRoundtripWithDifferentCryptoServices() throws Exception {
-        Map<String, Object> properties = new HashMap<>();
-        JcaPbeCryptoServiceConfiguration configuration = Converters.standardConverter().convert(properties).to(JcaPbeCryptoServiceConfiguration.class);
-        final JcaPbeCryptoService service = new JcaPbeCryptoService(configuration, salt, passwordProvider);
+    void testCryptoRoundtripWithDifferentCryptoServices() throws Exception {
+        assumeFalse(service.createDefaultAlgorithmParameters().getAlgorithm().startsWith("PBE"), "Skipping test for PBE algorithms as they transmit the salt in the crypto parameters");
         final String ciphertext = service.encrypt(MESSAGE);
         // must be same salt
         final JcaPbeCryptoService service2 = new JcaPbeCryptoService(configuration, salt, passwordProvider);
@@ -84,29 +128,13 @@ public class JcaPbeCryptoServiceTest {
     }
 
     @Test
-    public void testSameMessageDifferentCipher() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidParameterSpecException, InvalidKeySpecException {
-        Map<String, Object> properties = new HashMap<>();
-        JcaPbeCryptoServiceConfiguration configuration = Converters.standardConverter().convert(properties).to(JcaPbeCryptoServiceConfiguration.class);
-        final JcaPbeCryptoService service = new JcaPbeCryptoService(configuration, salt, passwordProvider);
+    void testSameMessageDifferentCipher() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidParameterSpecException, InvalidKeySpecException {
         final String ciphertext1 = service.encrypt(MESSAGE);
         final String ciphertext2 = service.encrypt(MESSAGE);
         assertEquals(MESSAGE, service.decrypt(ciphertext1));
         assertEquals(MESSAGE, service.decrypt(ciphertext2));
         // The ciphertexts should be different due to the use of a random IV
         assert(!ciphertext1.equals(ciphertext2));
-    }
-
-    @Test
-    public void testCryptoRoundtripWithBouncycastle() throws Exception {
-        // register BouncyCastle provider
-        Security.addProvider(new BouncyCastleProvider());
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("securityProviderName", "BC");
-        JcaPbeCryptoServiceConfiguration configuration = Converters.standardConverter().convert(properties).to(JcaPbeCryptoServiceConfiguration.class);
-        final JcaPbeCryptoService service = new JcaPbeCryptoService(configuration, salt, passwordProvider);
-        final String ciphertext = service.encrypt(MESSAGE);
-        final String message = service.decrypt(ciphertext);
-        assertEquals(MESSAGE, message);
     }
 
 }
