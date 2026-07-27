@@ -51,18 +51,14 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings({"java:S1117", "java:S6212"})
 public final class SecureRandomSaltProvider implements SaltProvider {
 
-    private SecureRandom secureRandom;
+    private final SecureRandom secureRandom;
 
-    private SecureRandomSaltProviderConfiguration configuration;
+    private final SecureRandomSaltProviderConfiguration configuration;
 
     private final Logger logger = LoggerFactory.getLogger(SecureRandomSaltProvider.class);
 
-    public SecureRandomSaltProvider() { //
-    }
-
     @Activate
-    @SuppressWarnings("unused")
-    private void activate(final SecureRandomSaltProviderConfiguration configuration) throws NoSuchAlgorithmException {
+    public SecureRandomSaltProvider(final SecureRandomSaltProviderConfiguration configuration) throws NoSuchAlgorithmException { //
         logger.debug("activating");
         this.configuration = configuration;
         if (configuration.algorithm().isBlank()) {

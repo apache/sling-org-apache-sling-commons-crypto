@@ -68,11 +68,12 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
     @AttributeDefinition(
         name = "Security Provider Name",
-        description = "Name of the Security Provider, must either be one of the standard names outlined in https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#provider-names or a custom provider name registered with the JVM.",
+        description = "Name of the Security Provider, must either be one of the standard names outlined in https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#provider-names or a custom provider name registered with the JVM. If left empty, the first registered provider for the given algorithm will be used.",
         required = false
     )
     String securityProviderName() default "SunJCE";
 
+    // automatically evaluated (https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.component.html#service.component-target.property)
     @AttributeDefinition(
         name = "Password Provider Target",
         description = "Filter expression to target a Password Provider (usually by name with a pattern like \"(names=*)\"). If not specified, the first available Password Provider will be used.",
@@ -80,6 +81,14 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     )
     String passwordProvider_target();
 
+    // automatically evaluated (https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.component.html#service.component-target.property)
+    @AttributeDefinition(
+        name = "Salt Provider Target",
+        description = "Filter expression to target a Salt Provider (usually by name with a pattern like \"(names=*)\"). If not specified, the first available Salt Provider will be used.",
+        required = false
+    )
+    String saltProvider();
+    
     @AttributeDefinition(
         name = "Service Ranking",
         description = "OSGi service.ranking value used to prioritize this service when multiple implementations are available."

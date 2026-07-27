@@ -107,17 +107,16 @@ class JcaPbeCryptoServiceTest {
     }
 
     @Test
-    void testCryptoRoundtrip() throws Exception {
+    void testCryptoRoundtrip() {
         final String ciphertext = service.encrypt(MESSAGE);
         final String message = service.decrypt(ciphertext);
         assertEquals(MESSAGE, message);
     }
 
     @Test
-    void testCryptoRoundtripWithDifferentCryptoServices() throws Exception {
+    void testCryptoRoundtripWithCryptoServicesHavingDifferentSalts() throws Exception {
         assumeFalse(service.createDefaultAlgorithmParameters().getAlgorithm().startsWith("PBE"), "Skipping test for PBE algorithms as they transmit the salt in the crypto parameters");
         final String ciphertext = service.encrypt(MESSAGE);
-        // must be same salt
         final JcaPbeCryptoService service2 = new JcaPbeCryptoService(configuration, salt, passwordProvider);
         final String message = service2.decrypt(ciphertext);
         assertEquals(MESSAGE, message);
@@ -128,7 +127,7 @@ class JcaPbeCryptoServiceTest {
     }
 
     @Test
-    void testSameMessageDifferentCipher() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidParameterSpecException, InvalidKeySpecException {
+    void testSameMessageDifferentCipher() {
         final String ciphertext1 = service.encrypt(MESSAGE);
         final String ciphertext2 = service.encrypt(MESSAGE);
         assertEquals(MESSAGE, service.decrypt(ciphertext1));
