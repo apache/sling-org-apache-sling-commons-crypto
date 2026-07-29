@@ -19,11 +19,13 @@
 package org.apache.sling.commons.crypto.jca.internal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -54,10 +56,10 @@ class JcaPbeCryptoServiceTest {
     // returns a stream of each 4 parameters: name, providerName, secretKeyFactoryAlgorithm, cipherAlgorithm
     private static Stream<Arguments> provideAlgorithms() {
         return Stream.of(
-          Arguments.of("Default (PBKDF2 with AES cipher)", "", "", ""), // empty means default algorithms
-          Arguments.of("PBES1 (PBEWithMD5AndDES)", "", "PBEWithMD5AndDES", "PBEWithMD5AndDES"),
-          Arguments.of("PBES2 (PBEWithHmacSHA256AndAES_128)", "", "PBEWithHmacSHA256AndAES_128", "PBEWithHmacSHA256AndAES_128"),
-          Arguments.of("BC: (PBKDF2 with ChaCha20)", "BC", "PBKDF2", "CHACHA20-POLY1305")
+          Arguments.of("Default (PBKDF2 with AES cipher)", "", "", "", false), // empty means default algorithms
+          Arguments.of("PBES1 (PBEWithMD5AndDES)", "", "PBEWithMD5AndDES", "PBEWithMD5AndDES", true),
+          Arguments.of("PBES2 (PBEWithHmacSHA256AndAES_128)", "", "PBEWithHmacSHA256AndAES_128", "PBEWithHmacSHA256AndAES_128", true),
+          Arguments.of("BC: (PBKDF2 with ChaCha20)", "BC", "PBKDF2", "CHACHA20-POLY1305", false)
           // Arguments.of("BC: SCRIPT with BLOWFISH", "BC", "SCRYPT", "BLOWFISH"), fails as requiring ScryptKeySpec
           // Arguments.of("BC: ARGON2 with BLOWFISH", "BC", "ARGON2", "BLOWFISH"), fails as requiring Argon2KeySpec
         );
@@ -71,9 +73,12 @@ class JcaPbeCryptoServiceTest {
 
     @Parameter(2)
     String secretKeyFactoryAlgorithm;
-    
+
     @Parameter(3)
     String cipherAlgorithm;
+    
+    @Parameter(4)
+    boolean paramsIncludeSalt;
 
     private static final String MESSAGE = "Rudy, a Message to You üøoøøt";
 
@@ -111,19 +116,17 @@ class JcaPbeCryptoServiceTest {
         final String ciphertext = service.encrypt(MESSAGE);
         final String message = service.decrypt(ciphertext);
         assertEquals(MESSAGE, message);
+        assertNotEquals(MESSAGE, ciphertext);
     }
 
     @Test
     void testCryptoRoundtripWithCryptoServicesHavingDifferentSalts() throws Exception {
-        assumeFalse(service.createDefaultAlgorithmParameters().getAlgorithm().startsWith("PBE"), "Skipping test for PBE algorithms as they transmit the salt in the crypto parameters");
         final String ciphertext = service.encrypt(MESSAGE);
-        final JcaPbeCryptoService service2 = new JcaPbeCryptoService(configuration, salt, passwordProvider);
-        final String message = service2.decrypt(ciphertext);
-        assertEquals(MESSAGE, message);
-        // now use different salt, should fail
+        // now use different salt, affects only encryption key, salt is part of the ciphertext, so decryption should still work
         new Random().nextBytes(salt);
-        final JcaPbeCryptoService service3 = new JcaPbeCryptoService(configuration, salt, passwordProvider);
-        assertThrows(IllegalArgumentException.class, () -> service3.decrypt(ciphertext));
+        final JcaPbeCryptoService service2 = new JcaPbeCryptoService(configuration, salt, passwordProvider);
+        assertEquals(MESSAGE, service2.decrypt(ciphertext));
+        assertEquals(MESSAGE, service.decrypt(service2.encrypt(MESSAGE)));
     }
 
     @Test
@@ -136,4 +139,8 @@ class JcaPbeCryptoServiceTest {
         assert(!ciphertext1.equals(ciphertext2));
     }
 
+    @Test
+    void testIfSaltIsIncludedInParams() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException, IOException {
+        assertEquals(paramsIncludeSalt, JcaPbeCryptoService.isSaltIncludedInParams(service.createDefaultAlgorithmParameters()));
+    }
 }

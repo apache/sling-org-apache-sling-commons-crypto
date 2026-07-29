@@ -87,14 +87,14 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
         description = "Filter expression to target a Salt Provider (usually by name with a pattern like \"(names=*)\"). If not specified, the first available Salt Provider will be used.",
         required = false
     )
-    String saltProvider();
-    
+    String saltProvider_target();
+
     @AttributeDefinition(
         name = "Service Ranking",
         description = "OSGi service.ranking value used to prioritize this service when multiple implementations are available."
     )
     int service_ranking() default 0;
 
-    String webconsole_configurationFactory_nameHint() default "{names} PBKDF: {secretKeyFactory}, Cipher: {cipherAlgorithm}";
+    String webconsole_configurationFactory_nameHint() default "{names} SecretKeyFactory: {secretKeyFactory}, Cipher: {cipherAlgorithm}";
 
 }

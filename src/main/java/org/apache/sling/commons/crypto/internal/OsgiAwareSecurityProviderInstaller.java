@@ -38,21 +38,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This DS component listens for bundle events and automatically registers or unregisters security providers
- * based on the presence of a service registration file {@value #SECURITY_PROVIDER_CONFIGURATION_FILE} in the bundle.
+ * This DS component listens for bundle events and automatically installs or uninstalls security providers
+ * based on the presence of a service registration file {@value #SECURITY_PROVIDER_CONFIGURATION_FILE} in the 
+ * started/stopping bundle.
  */
 @Component(immediate = true, service= {}, name = "org.apache.sling.commons.crypto.internal.AutoRegisterSecurityProvider")
 @ServiceDescription("Apache Sling Commons Crypto – Auto Register Security Provider")
-public class AutoRegisterSecurityProvider implements SynchronousBundleListener {
+public class OsgiAwareSecurityProviderInstaller implements SynchronousBundleListener {
     private static final String SECURITY_PROVIDER_CONFIGURATION_FILE = "META-INF/services/java.security.Provider";
-    private static final Logger LOGGER = LoggerFactory.getLogger(AutoRegisterSecurityProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OsgiAwareSecurityProviderInstaller.class);
 
     @Activate
-    public AutoRegisterSecurityProvider(BundleContext bundleContext) {
+    public OsgiAwareSecurityProviderInstaller(BundleContext bundleContext) {
         bundleContext.addBundleListener(this);
         for (Bundle bundle : bundleContext.getBundles()) {
             if (bundle.getState() == Bundle.ACTIVE) {
-                addOrRemoveProviderClass(true, bundle);
+                addOrRemoveProviders(true, bundle);
             }
         }
     }
@@ -62,7 +63,7 @@ public class AutoRegisterSecurityProvider implements SynchronousBundleListener {
         bundleContext.removeBundleListener(this);
         for (Bundle bundle : bundleContext.getBundles()) {
             if (bundle.getState() == Bundle.ACTIVE) {
-                addOrRemoveProviderClass(false, bundle);
+                addOrRemoveProviders(false, bundle);
             }
         }
     }
@@ -79,15 +80,15 @@ public class AutoRegisterSecurityProvider implements SynchronousBundleListener {
             LOGGER.debug("Ignoring bundle event {} for bundle {}", event.getType(), bundle.getSymbolicName());
             return;
         }
-        addOrRemoveProviderClass(isAdd, bundle);
+        addOrRemoveProviders(isAdd, bundle);
     }
 
-    protected void addOrRemoveProviderClass(boolean isAdd, Bundle bundle) {
+    protected void addOrRemoveProviders(boolean isAdd, Bundle bundle) {
         try {
             Collection<String> classNames = collectClassNamesFromProviderConfigurationFile(bundle);
             for (String className : classNames) {
                 try {
-                    addOrRemoveProviderClass(isAdd, bundle, className);
+                    addOrRemoveProvider(isAdd, bundle, className);
                 } catch (ClassNotFoundException e) {
                     LOGGER.error("Class {} not found in bundle {}: {}", className, bundle.getSymbolicName(), e.getMessage(), e);
                 } catch (Exception e) {
@@ -120,31 +121,31 @@ public class AutoRegisterSecurityProvider implements SynchronousBundleListener {
         return classNames;
     }
 
-    protected void addOrRemoveProviderClass(boolean isAdd, Bundle bundle, String className)
+    protected void addOrRemoveProvider(boolean isAdd, Bundle bundle, String providerClassName)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, NoSuchMethodException, SecurityException {
-        Class<?> clazz = bundle.loadClass(className);
+        Class<?> clazz = bundle.loadClass(providerClassName);
         if (!Provider.class.isAssignableFrom(clazz)) {
             // Handle the case where the class is not a Provider
-            LOGGER.warn("Class {} in bundle {} is not a subclass of java.security.Provider", className, bundle);
+            LOGGER.warn("Class {} in bundle {} is not a subclass of java.security.Provider", providerClassName, bundle);
         }
         Provider provider = (Provider) clazz.getDeclaredConstructor().newInstance();
         if (isAdd) {
             int position = Security.addProvider(provider);
             if (position == -1) {
-                LOGGER.warn("Failed to add security provider {} (name {}) from bundle {} to the security providers list", className, provider.getName(), bundle);
+                LOGGER.warn("Failed to add security provider {} (name {}) from bundle {} to the security providers list. Provider with that name already registered.", providerClassName, provider.getName(), bundle);
             }
             // also add service registration for the provider so that other services can defer loading until the provider is available
             Hashtable<String, String> props = new Hashtable<>();
             props.put("provider.name", provider.getName());
             bundle.getBundleContext().registerService(Provider.class, provider, props);
-            LOGGER.info("Added security provider {} (name {}) from bundle {} to last position {}", className, provider.getName(), bundle, position);
+            LOGGER.info("Added security provider {} (name {}) from bundle {} to last position {}", providerClassName, provider.getName(), bundle, position);
         } else {
             if (Security.getProvider(provider.getName()) != null) {
                 Security.removeProvider(provider.getName());
-                LOGGER.info("Removed security provider {} (name {}) from bundle {}", className, provider.getName(), bundle);
+                LOGGER.info("Removed security provider {} (name {}) from bundle {}", providerClassName, provider.getName(), bundle);
             } else {
-                LOGGER.warn("Security provider {} (name {}) not found for removal", className, provider.getName());
+                LOGGER.warn("Security provider {} (name {}) not found for removal", providerClassName, provider.getName());
             }
         }
     }

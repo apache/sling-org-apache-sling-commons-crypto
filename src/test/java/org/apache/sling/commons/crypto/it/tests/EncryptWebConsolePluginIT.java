@@ -74,7 +74,6 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
     private void registerCryptoService() {
         final Dictionary<String, Object> properties = new Hashtable<>();
         properties.put("names", new String[]{"reverse"});
-        properties.put("algorithm", "reverse");
         registration = bundleContext.registerService(CryptoService.class, cryptoService, properties);
     }
 
@@ -86,7 +85,9 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
             newConfiguration("org.apache.felix.http")
                 .put("org.osgi.service.http.port", httpPort)
                 .asOption(),
+            // missing the OWASP encoder dependency (added in https://github.com/apache/sling-org-apache-sling-testing-paxexam/commit/a9974736b45677a52c2cf117b1525aac3f535b5b, but not yet released) so we need to add it here
             webconsole(),
+            mavenBundle().groupId("org.owasp.encoder").artifactId("encoder").versionAsInProject(),
             mavenBundle().groupId("org.jsoup").artifactId("jsoup").versionAsInProject()
         );
     }
@@ -113,8 +114,7 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
         final String id = reference.getProperty(Constants.SERVICE_ID).toString();
         final String description = Objects.toString(reference.getProperty(Constants.SERVICE_DESCRIPTION), "");
         final String[] names = (String[]) reference.getProperty("names");
-        final String algorithm = Objects.toString(reference.getProperty("algorithm"), "unknown");
-        final String label = String.format("Service id %s (%s), names: %s, algorithm: %s", id, description, Arrays.toString(names), algorithm);
+        final String label = String.format("Service id %s (%s), names: %s, algorithm(s): reverse", id, description, Arrays.toString(names));
         final Document document = Jsoup.connect(url)
             .header("Authorization", String.format("Basic %s", CREDENTIALS))
             .get();
