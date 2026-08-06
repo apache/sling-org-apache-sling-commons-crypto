@@ -18,8 +18,12 @@
  */
 package org.apache.sling.commons.crypto.internal;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.security.Provider;
 import java.security.Security;
 import java.util.ArrayList;
@@ -44,7 +48,7 @@ import org.slf4j.LoggerFactory;
  */
 @Component(immediate = true, service= {}, name = "org.apache.sling.commons.crypto.internal.AutoRegisterSecurityProvider")
 @ServiceDescription("Apache Sling Commons Crypto – Auto Register Security Provider")
-public class OsgiAwareSecurityProviderInstaller implements SynchronousBundleListener {
+public final class OsgiAwareSecurityProviderInstaller implements SynchronousBundleListener {
     private static final String SECURITY_PROVIDER_CONFIGURATION_FILE = "META-INF/services/java.security.Provider";
     private static final Logger LOGGER = LoggerFactory.getLogger(OsgiAwareSecurityProviderInstaller.class);
 
@@ -104,14 +108,13 @@ public class OsgiAwareSecurityProviderInstaller implements SynchronousBundleList
         var serviceRegistrationResource = bundle.getEntry(SECURITY_PROVIDER_CONFIGURATION_FILE);
         Collection<String> classNames = new ArrayList<>();
         if (serviceRegistrationResource != null) {
-            try (var inputStream = serviceRegistrationResource.openStream()) {
-                try (var reader = new java.io.BufferedReader(new java.io.InputStreamReader(inputStream))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        line = line.trim();
-                        if (!line.isEmpty() && !line.startsWith("#")) {
-                            classNames.add(line);
-                        }
+            try (InputStream inputStream = serviceRegistrationResource.openStream();
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    line = line.trim();
+                    if (!line.isEmpty() && !line.startsWith("#")) {
+                        classNames.add(line);
                     }
                 }
             }

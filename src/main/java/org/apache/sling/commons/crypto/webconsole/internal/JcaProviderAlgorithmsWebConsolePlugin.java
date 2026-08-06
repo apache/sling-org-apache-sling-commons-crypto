@@ -80,14 +80,18 @@ public final class JcaProviderAlgorithmsWebConsolePlugin extends HttpServlet {
         writer.println("<tbody>");
         for (Service service : services) {
             writer.println("<tr>");
-            writer.println("<td>" + escapeHtml(service.getProvider().getName()) + "</td>");
-            writer.println("<td>" + escapeHtml(service.getType()) + "</td>");
-            writer.println("<td>" + escapeHtml(service.getAlgorithm()) + "</td>");
-            writer.println("<td>" + escapeHtml(service.getClassName()) + "</td>");
+            writeTableCell(writer, service.getProvider().getName());
+            writeTableCell(writer, service.getType());
+            writeTableCell(writer, service.getAlgorithm());
+            writeTableCell(writer, service.getClassName());
             writer.println("</tr>");
         }
         writer.println("</tbody>");
         writer.println("</table>");
+    }
+
+    private void writeTableCell(final PrintWriter writer, String text) {
+        writer.println("<td>" + escapeHtml(text) + "</td>");
     }
 
     private @NotNull void writeForm(@NotNull PrintWriter writer, @NotNull Consumer<Service> serviceConsumer, @NotNull String selectedProviderName, @NotNull String selectedServiceType, Provider...providers) {
@@ -160,7 +164,7 @@ public final class JcaProviderAlgorithmsWebConsolePlugin extends HttpServlet {
                .append("</script>");
     }
 
-    class ServiceTypePredicate implements java.util.function.Predicate<Provider.Service> {
+    static class ServiceTypePredicate implements java.util.function.Predicate<Provider.Service> {
         private final String serviceType;
 
         public ServiceTypePredicate(String serviceType) {

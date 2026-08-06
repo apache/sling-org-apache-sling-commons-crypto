@@ -107,7 +107,7 @@ public final class JasyptStandardPbeStringCryptoService implements CryptoService
     }
 
     private void setupEncryptor(final JasyptStandardPbeStringCryptoServiceConfiguration configuration) {
-        final String algorithm = configuration.algorithm();
+        algorithm = configuration.algorithm();
         final Set<?> algorithms = AlgorithmRegistry.getAllPBEAlgorithms();
         if (!algorithms.contains(algorithm)) {
             logger.warn("Configured algorithm {} for password based encryption is not available. {}", algorithm, algorithms);

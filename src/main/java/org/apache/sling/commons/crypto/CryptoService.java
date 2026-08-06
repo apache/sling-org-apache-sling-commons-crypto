@@ -53,7 +53,7 @@ public interface CryptoService {
      * This method is optional and may return {@code null} if no description is available.
      *
      * @return A description of the algorithm used by this service, or {@code null} if not available
-     * @since 1.2.0
+     * @since 1.2.0 (Bundle version 1.3.0)
      */
     default @Nullable String getAlgorithmDescription() {
         return null;

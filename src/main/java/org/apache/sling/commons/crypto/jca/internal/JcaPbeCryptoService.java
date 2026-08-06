@@ -328,8 +328,13 @@ public final class JcaPbeCryptoService implements CryptoService {
 
     @Override
     public @Nullable String getAlgorithmDescription() {
-        return "secretKeyFactory=" + configuration.secretKeyFactoryAlgorithm() + ", cipher="
-                + configuration.cipherAlgorithm() + ", provider=" + configuration.securityProviderName();
+        StringBuilder sb = new StringBuilder();
+        sb.append("secretKeyFactory=").append(configuration.secretKeyFactoryAlgorithm());
+        sb.append(", cipher=").append(configuration.cipherAlgorithm());
+        if (!configuration.securityProviderName().isBlank()) {
+            sb.append(", provider=").append(configuration.securityProviderName());
+        }
+        return sb.toString();
     }
     @Override
     public String toString() {

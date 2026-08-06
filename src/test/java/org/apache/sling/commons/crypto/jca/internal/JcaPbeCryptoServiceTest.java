@@ -20,8 +20,6 @@ package org.apache.sling.commons.crypto.jca.internal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +29,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.InvalidParameterSpecException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -54,6 +51,7 @@ import org.osgi.util.converter.Converters;
 class JcaPbeCryptoServiceTest {
 
     // returns a stream of each 4 parameters: name, providerName, secretKeyFactoryAlgorithm, cipherAlgorithm
+    @SuppressWarnings("unused")
     private static Stream<Arguments> provideAlgorithms() {
         return Stream.of(
           Arguments.of("Default (PBKDF2 with AES cipher)", "", "", "", false), // empty means default algorithms
@@ -76,7 +74,7 @@ class JcaPbeCryptoServiceTest {
 
     @Parameter(3)
     String cipherAlgorithm;
-    
+
     @Parameter(4)
     boolean paramsIncludeSalt;
 
@@ -88,7 +86,7 @@ class JcaPbeCryptoServiceTest {
     private JcaPbeCryptoService service;
 
     @BeforeEach
-    void setUp() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidParameterSpecException, InvalidKeySpecException {
+    void setUp() throws NoSuchAlgorithmException {
         passwordProvider = mock(PasswordProvider.class);
         when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
         salt = new byte[16];
