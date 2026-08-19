@@ -37,13 +37,13 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
     @AttributeDefinition(
         name = "Algorithm",
-        description = "secure random number generation algorithm"
+        description = "Secure random number generation algorithm. The standard ones are outlined in https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#securerandom-number-generation-algorithms. Leave empty to use the JRE's default SecureRandom implementation."
     )
-    String algorithm() default "SHA1PRNG";
+    String algorithm() default "";
 
     @AttributeDefinition(
-        name = "Key Length",
-        description = "length of the key"
+        name = "Salt Length",
+        description = "Length of the generated salt in bytes"
     )
     int keyLength() default 8;
 

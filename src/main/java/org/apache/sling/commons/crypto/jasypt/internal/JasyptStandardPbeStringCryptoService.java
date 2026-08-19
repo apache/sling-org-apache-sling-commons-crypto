@@ -30,6 +30,7 @@ import org.jasypt.iv.IvGenerator;
 import org.jasypt.registry.AlgorithmRegistry;
 import org.jasypt.salt.SaltGenerator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -77,8 +78,11 @@ public final class JasyptStandardPbeStringCryptoService implements CryptoService
 
     private StandardPBEStringEncryptor encryptor;
 
+    private String algorithm;
+
     private final Logger logger = LoggerFactory.getLogger(JasyptStandardPbeStringCryptoService.class);
 
+    @SuppressWarnings("unused")
     public JasyptStandardPbeStringCryptoService() { //
     }
 
@@ -103,7 +107,7 @@ public final class JasyptStandardPbeStringCryptoService implements CryptoService
     }
 
     private void setupEncryptor(final JasyptStandardPbeStringCryptoServiceConfiguration configuration) {
-        final String algorithm = configuration.algorithm();
+        algorithm = configuration.algorithm();
         final Set<?> algorithms = AlgorithmRegistry.getAllPBEAlgorithms();
         if (!algorithms.contains(algorithm)) {
             logger.warn("Configured algorithm {} for password based encryption is not available. {}", algorithm, algorithms);
@@ -146,4 +150,10 @@ public final class JasyptStandardPbeStringCryptoService implements CryptoService
         return encryptor.decrypt(ciphertext);
     }
 
+    @Override
+    public @Nullable String getAlgorithmDescription() {
+        return algorithm;
+    }
+
+    
 }

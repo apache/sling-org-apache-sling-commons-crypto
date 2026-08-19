@@ -18,53 +18,22 @@
  */
 package org.apache.sling.commons.crypto.internal;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-
-import org.apache.commons.lang3.reflect.MethodUtils;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.Test;
+
 public class SecureRandomSaltProviderTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-    @Test
-    public void testMissingConfiguration() throws IOException, NoSuchAlgorithmException {
-        final SecureRandomSaltProvider provider = new SecureRandomSaltProvider();
-        exception.expect(NullPointerException.class);
-        exception.expectMessage("Configuration must not be null");
-        provider.getSalt();
-    }
 
     @Test
     public void testComponentLifecycle() throws Exception {
-        final SecureRandomSaltProvider provider = new SecureRandomSaltProvider();
-        { // activate
-            final SecureRandomSaltProviderConfiguration configuration = mock(SecureRandomSaltProviderConfiguration.class);
-            when(configuration.algorithm()).thenReturn("SHA1PRNG");
-            when(configuration.keyLength()).thenReturn(8);
-            MethodUtils.invokeMethod(provider, true, "activate", configuration);
-            assertThat(provider.getSalt().length, is(8));
-        }
-        { // modified
-            final SecureRandomSaltProviderConfiguration configuration = mock(SecureRandomSaltProviderConfiguration.class);
-            when(configuration.algorithm()).thenReturn("SHA1PRNG");
-            when(configuration.keyLength()).thenReturn(16);
-            MethodUtils.invokeMethod(provider, true, "modified", configuration);
-            assertThat(provider.getSalt().length, is(16));
-        }
-        { // deactivate
-            MethodUtils.invokeMethod(provider, true, "deactivate");
-            assertThat(provider.getSalt().length, is(16));
-        }
+        final SecureRandomSaltProviderConfiguration configuration = mock(SecureRandomSaltProviderConfiguration.class);
+        when(configuration.algorithm()).thenReturn("SHA1PRNG");
+        when(configuration.keyLength()).thenReturn(8);
+        SecureRandomSaltProvider provider = new SecureRandomSaltProvider(configuration);
+        assertThat(provider.getSalt().length, is(8));
     }
 
 }

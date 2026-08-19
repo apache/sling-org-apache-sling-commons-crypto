@@ -18,11 +18,20 @@
  */
 package org.apache.sling.commons.crypto.it.tests;
 
+import static org.apache.sling.testing.paxexam.SlingOptions.webconsole;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.newConfiguration;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -43,14 +52,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
-
-import static org.apache.sling.testing.paxexam.SlingOptions.webconsole;
-import static org.hamcrest.CoreMatchers.endsWith;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.newConfiguration;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerMethod.class)
@@ -73,7 +74,6 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
     private void registerCryptoService() {
         final Dictionary<String, Object> properties = new Hashtable<>();
         properties.put("names", new String[]{"reverse"});
-        properties.put("algorithm", "reverse");
         registration = bundleContext.registerService(CryptoService.class, cryptoService, properties);
     }
 
@@ -85,7 +85,9 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
             newConfiguration("org.apache.felix.http")
                 .put("org.osgi.service.http.port", httpPort)
                 .asOption(),
+            // missing the OWASP encoder dependency (added in https://github.com/apache/sling-org-apache-sling-testing-paxexam/commit/a9974736b45677a52c2cf117b1525aac3f535b5b, but not yet released) so we need to add it here
             webconsole(),
+            mavenBundle().groupId("org.owasp.encoder").artifactId("encoder").versionAsInProject(),
             mavenBundle().groupId("org.jsoup").artifactId("jsoup").versionAsInProject()
         );
     }
@@ -110,9 +112,9 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
     public void testGetFormCryptoServiceAvailable() throws IOException {
         final ServiceReference<CryptoService> reference = registration.getReference();
         final String id = reference.getProperty(Constants.SERVICE_ID).toString();
+        final String description = Objects.toString(reference.getProperty(Constants.SERVICE_DESCRIPTION), "");
         final String[] names = (String[]) reference.getProperty("names");
-        final String algorithm = reference.getProperty("algorithm").toString();
-        final String label = String.format("Service id %s, names: %s, algorithm: %s", id, Arrays.toString(names), algorithm);
+        final String label = String.format("Service id %s (%s), names: %s, algorithm(s): reverse", id, description, Arrays.toString(names));
         final Document document = Jsoup.connect(url)
             .header("Authorization", String.format("Basic %s", CREDENTIALS))
             .get();

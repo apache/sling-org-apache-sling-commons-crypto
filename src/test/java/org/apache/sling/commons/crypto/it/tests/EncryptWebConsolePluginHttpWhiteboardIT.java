@@ -18,14 +18,13 @@
  */
 package org.apache.sling.commons.crypto.it.tests;
 
+import static org.ops4j.pax.exam.OptionUtils.combine;
+
 import org.apache.sling.testing.paxexam.SlingOptions;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerMethod;
-
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.OptionUtils.combine;
 
 @ExamReactorStrategy(PerMethod.class)
 public class EncryptWebConsolePluginHttpWhiteboardIT extends EncryptWebConsolePluginIT {
@@ -36,8 +35,7 @@ public class EncryptWebConsolePluginHttpWhiteboardIT extends EncryptWebConsolePl
         SlingOptions.versionResolver.setVersionFromProject("org.apache.felix", "org.apache.felix.http.servlet-api");
         SlingOptions.versionResolver.setVersionFromProject("org.apache.felix", "org.apache.felix.webconsole");
         return combine(
-            super.configuration(),
-            mavenBundle().groupId("org.owasp.encoder").artifactId("encoder").versionAsInProject()
+            super.configuration()
         );
     }
 

@@ -27,8 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,36 +49,21 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings({"java:S1117", "java:S6212"})
 public final class SecureRandomSaltProvider implements SaltProvider {
 
-    private SecureRandom secureRandom;
+    private final SecureRandom secureRandom;
 
-    private SecureRandomSaltProviderConfiguration configuration;
+    private final SecureRandomSaltProviderConfiguration configuration;
 
     private final Logger logger = LoggerFactory.getLogger(SecureRandomSaltProvider.class);
 
-    public SecureRandomSaltProvider() { //
-    }
-
     @Activate
-    @SuppressWarnings("unused")
-    private void activate(final SecureRandomSaltProviderConfiguration configuration) throws NoSuchAlgorithmException {
+    public SecureRandomSaltProvider(final SecureRandomSaltProviderConfiguration configuration) throws NoSuchAlgorithmException { //
         logger.debug("activating");
         this.configuration = configuration;
-        secureRandom = SecureRandom.getInstance(configuration.algorithm());
-
-    }
-
-    @Modified
-    @SuppressWarnings("unused")
-    private void modified(final SecureRandomSaltProviderConfiguration configuration) throws NoSuchAlgorithmException {
-        logger.debug("modifying");
-        this.configuration = configuration;
-        secureRandom = SecureRandom.getInstance(configuration.algorithm());
-    }
-
-    @Deactivate
-    @SuppressWarnings("unused")
-    private void deactivate() {
-        logger.debug("deactivating");
+        if (configuration.algorithm().isBlank()) {
+            secureRandom = new SecureRandom();
+        } else {
+            secureRandom = SecureRandom.getInstance(configuration.algorithm());
+        }
     }
 
     @Override

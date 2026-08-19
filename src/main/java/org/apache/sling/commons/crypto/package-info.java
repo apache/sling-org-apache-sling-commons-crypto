@@ -20,7 +20,7 @@
 /**
  * Provides the Apache Sling Commons Crypto API.
  */
-@Version("1.1.0")
+@Version("1.2.0")
 package org.apache.sling.commons.crypto;
 
 import org.osgi.annotation.versioning.Version;

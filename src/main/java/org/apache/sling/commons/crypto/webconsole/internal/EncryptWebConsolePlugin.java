@@ -62,8 +62,6 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
 
     private static final String ATTRIBUTE_CIPHERTEXT = "org.apache.sling.commons.crypto.webconsole.internal.EncryptWebConsolePlugin.ciphertext";
 
-    private BundleContext bundleContext;
-
     private ServiceTracker<CryptoService, CryptoService> tracker;
 
     public EncryptWebConsolePlugin() { //
@@ -72,7 +70,6 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
     @Activate
     @SuppressWarnings("unused")
     private void activate(final BundleContext bundleContext) {
-        this.bundleContext = bundleContext;
         tracker = new ServiceTracker<>(bundleContext, CryptoService.class, null);
         tracker.open();
     }
@@ -80,7 +77,6 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
     @Deactivate
     @SuppressWarnings("unused")
     private void deactivate() {
-        this.bundleContext = null;
         if (Objects.nonNull(tracker)) {
             tracker.close();
             tracker = null;
@@ -158,9 +154,11 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
         builder.append("<select id=\"service-id\" name=\"service-id\">");
         for (final ServiceReference<CryptoService> reference : references) {
             final String id = reference.getProperty(Constants.SERVICE_ID).toString();
+            final String description = Objects.toString(reference.getProperty(Constants.SERVICE_DESCRIPTION), "");
             final String[] names = (String[]) reference.getProperty("names");
-            final String algorithm = reference.getProperty("algorithm").toString();
-            final String label = String.format("Service id %s, names: %s, algorithm: %s", id, Arrays.toString(names), algorithm);
+            CryptoService service = findCryptoService(id);
+            final String algorithm = Objects.toString(service.getAlgorithmDescription(), "");
+            final String label = String.format("Service id %s (%s), names: %s, algorithm(s): %s", id, description, Arrays.toString(names), algorithm);
             builder.append("<option value=\"").append(id).append("\">");
             builder.append(label);
             builder.append("</option>");
@@ -180,7 +178,7 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
         }
         for (final ServiceReference<CryptoService> reference : references) {
             if (id.equals(reference.getProperty(Constants.SERVICE_ID).toString())) {
-                return bundleContext.getService(reference);
+                return tracker.getService(reference);
             }
         }
         return null;

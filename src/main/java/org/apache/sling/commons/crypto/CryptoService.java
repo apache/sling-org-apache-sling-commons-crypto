@@ -19,6 +19,7 @@
 package org.apache.sling.commons.crypto;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -32,6 +33,7 @@ public interface CryptoService {
      *
      * @param message The message to encrypt
      * @return The encrypted message, the ciphertext
+     * @throws IllegalStateException if the message cannot be encrypted for some reason
      */
     public abstract @NotNull String encrypt(@NotNull final String message);
 
@@ -40,7 +42,21 @@ public interface CryptoService {
      *
      * @param ciphertext The encrypted message, the ciphertext to decrypt
      * @return The decrypted message
+     * @throws IllegalArgumentException if the message cannot be decrypted for some reason
+     * @throws IllegalStateException if the key used to decrypt the message is not available or cannot be used for some reason
      */
     public abstract @NotNull String decrypt(@NotNull final String ciphertext);
+    
+    /**
+     * Returns a description of the algorithm(s) used by this service.
+     * <p>
+     * This method is optional and may return {@code null} if no description is available.
+     *
+     * @return A description of the algorithm used by this service, or {@code null} if not available
+     * @since 1.2.0 (Bundle version 1.3.0)
+     */
+    default @Nullable String getAlgorithmDescription() {
+        return null;
+    }
 
 }

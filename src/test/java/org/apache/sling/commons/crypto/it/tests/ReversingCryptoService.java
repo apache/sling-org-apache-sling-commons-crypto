@@ -20,6 +20,7 @@ package org.apache.sling.commons.crypto.it.tests;
 
 import org.apache.sling.commons.crypto.CryptoService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ReversingCryptoService implements CryptoService {
 
@@ -35,4 +36,8 @@ public class ReversingCryptoService implements CryptoService {
         return sb.reverse().toString();
     }
 
+    @Override
+    public @Nullable String getAlgorithmDescription() {
+        return "reverse";
+    }
 }
