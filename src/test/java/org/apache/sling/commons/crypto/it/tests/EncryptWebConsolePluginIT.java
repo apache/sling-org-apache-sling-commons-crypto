@@ -104,7 +104,7 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
         final Document document = Jsoup.connect(url)
             .header("Authorization", String.format("Basic %s", CREDENTIALS))
             .get();
-        assertThat(document.title(), is("Apache Felix Web Console - Sling Commons Crypto Encrypt"));
+        assertThat(document.title(), is("Apache Felix Web Console - Commons Crypto Encrypt"));
         assertThat(document.getElementById("content").child(0).text(), is("No crypto service available"));
     }
 
@@ -118,7 +118,7 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
         final Document document = Jsoup.connect(url)
             .header("Authorization", String.format("Basic %s", CREDENTIALS))
             .get();
-        assertThat(document.title(), is("Apache Felix Web Console - Sling Commons Crypto Encrypt"));
+        assertThat(document.title(), is("Apache Felix Web Console - Commons Crypto Encrypt"));
         assertThat(document.getElementById("service-id").child(0).text(), is(label));
     }
 
@@ -133,7 +133,7 @@ public class EncryptWebConsolePluginIT extends CryptoTestSupport {
             .data("service-id", id)
             .data("message", message)
             .post();
-        assertThat(document.title(), is("Apache Felix Web Console - Sling Commons Crypto Encrypt"));
+        assertThat(document.title(), is("Apache Felix Web Console - Commons Crypto Encrypt"));
         assertThat(document.getElementById("ciphertext").text(), is(text));
     }
 
