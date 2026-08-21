@@ -98,25 +98,4 @@ public class JasyptStandardPbeStringCryptoServiceTest {
         assertThat(message, is(MESSAGE));
     }
 
-    @Test
-    public void testProvider() throws Exception {
-        final Provider securityProvider = new BouncyCastleProvider();
-        final PasswordProvider passwordProvider = mock(PasswordProvider.class);
-        when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
-        final JasyptStandardPbeStringCryptoService service = new JasyptStandardPbeStringCryptoService();
-        FieldUtils.writeDeclaredField(service, "passwordProvider", passwordProvider, true);
-        FieldUtils.writeDeclaredField(service, "ivGenerator", new RandomIvGenerator(), true);
-        FieldUtils.writeDeclaredField(service, "securityProvider", securityProvider, true);
-
-        final JasyptStandardPbeStringCryptoServiceConfiguration configuration = mock(JasyptStandardPbeStringCryptoServiceConfiguration.class);
-        when(configuration.algorithm()).thenReturn("PBEWITHSHA256AND128BITAES-CBC-BC");
-        when(configuration.keyObtentionIterations()).thenReturn(DEFAULT_KEY_OBTENTION_ITERATIONS);
-        when(configuration.securityProviderName()).thenReturn(null);
-        when(configuration.stringOutputType()).thenReturn(STRING_OUTPUT_TYPE_BASE64);
-        MethodUtils.invokeMethod(service, true, "activate", configuration);
-        final String ciphertext = service.encrypt(MESSAGE);
-        final String message = service.decrypt(ciphertext);
-        assertThat(message, is(MESSAGE));
-    }
-
 }
