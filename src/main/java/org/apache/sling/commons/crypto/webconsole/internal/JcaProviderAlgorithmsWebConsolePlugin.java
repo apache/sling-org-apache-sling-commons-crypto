@@ -46,8 +46,8 @@ import org.osgi.service.component.annotations.Component;
     service = Servlet.class,
     property = {
         "felix.webconsole.label=sling-commons-crypto-jca-provider-algorithms",
-        "felix.webconsole.title=Sling Commons Crypto JCA Provider Algorithms",
-        "felix.webconsole.category=Crypto"
+        "felix.webconsole.title=JCA Provider Algorithms",
+        "felix.webconsole.category=Sling"
     }
 )
 @SuppressWarnings({"java:S1989", "java:S2226", "java:S6212"})
