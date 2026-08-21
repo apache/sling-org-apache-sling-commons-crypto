@@ -49,8 +49,8 @@ import org.osgi.util.tracker.ServiceTracker;
     service = Servlet.class,
     property = {
         "felix.webconsole.label=sling-commons-crypto-encrypt",
-        "felix.webconsole.title=Sling Commons Crypto Encrypt",
-        "felix.webconsole.category=Crypto"
+        "felix.webconsole.title=Commons Crypto Encrypt",
+        "felix.webconsole.category=Sling"
     }
 )
 @SuppressWarnings({"java:S1989", "java:S2226", "java:S6212"})
