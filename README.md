@@ -6,6 +6,14 @@
 
 This module is part of the [Apache Sling](https://sling.apache.org) project.
 
-This module contains a simple crypto API and an extensible but optional implementation based on [Jasypt](https://github.com/jasypt/jasypt) as well as a plugin for Felix Web Console to encrypt messages.
+This module contains a simple crypto API and two implementations:
+
+- A [Java Cryptographic Architecture(JCA)](https://docs.oracle.com/en/java/javase/11/security/java-cryptography-architecture-jca-reference-guide.html) based one
+- A **deprecated** one based on the no longer maintained library [Jasypt](https://github.com/jasypt/jasypt). **It is strongly recommended to migrate to the JCA one with a strong cipher**.
+
+In addition it exposes two plugin for Felix Web Console:
+
+1. To encrypt messages
+2. To list all registered JCA algorithms of all registered JCA providers
 
 See [Sling's documentation for Commons Crypto](https://sling.apache.org/documentation/bundles/commons-crypto.html) for details.

@@ -19,5 +19,7 @@
 
 /**
  * Provides an implementation of the Apache Sling Commons Crypto API (Crypto Service) based on Jasypt.
+ * @deprecated Use org.apache.sling.commons.crypto.jca instead.
  */
+@Deprecated(since = "1.3.0", forRemoval = true)
 package org.apache.sling.commons.crypto.jasypt.internal;
