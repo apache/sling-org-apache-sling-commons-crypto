@@ -107,6 +107,7 @@ public final class JasyptStandardPbeStringCryptoService implements CryptoService
     }
 
     private void setupEncryptor(final JasyptStandardPbeStringCryptoServiceConfiguration configuration) {
+        logger.warn("Using deprecated JasyptStandardPbeStringCryptoService, please migrate to the safer JcaPbeCryptoService");
         algorithm = configuration.algorithm();
         final Set<?> algorithms = AlgorithmRegistry.getAllPBEAlgorithms();
         if (!algorithms.contains(algorithm)) {
