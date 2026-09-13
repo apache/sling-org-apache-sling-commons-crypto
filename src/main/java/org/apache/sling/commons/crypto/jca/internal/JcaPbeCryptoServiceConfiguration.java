@@ -95,6 +95,6 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     )
     int service_ranking() default 0;
 
-    String webconsole_configurationFactory_nameHint() default "{names} SecretKeyFactory: {secretKeyFactory}, Cipher: {cipherAlgorithm}";
+    String webconsole_configurationFactory_nameHint() default "Names: {names} (SecretKeyFactory: \"{secretKeyFactory}\", Cipher: \"{cipherAlgorithm}\", Provider: \"{securityProviderName}\")";
 
 }
