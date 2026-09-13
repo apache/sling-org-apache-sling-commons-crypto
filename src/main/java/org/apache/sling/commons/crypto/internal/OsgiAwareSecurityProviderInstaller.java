@@ -29,10 +29,13 @@ import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.SynchronousBundleListener;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -42,22 +45,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This DS component listens for bundle events and automatically installs or uninstalls security providers
+ * This DS component listens for bundle events and automatically adds or removes security providers with the Java Security API
  * based on the presence of a service registration file {@value #SECURITY_PROVIDER_CONFIGURATION_FILE} in the 
- * started/stopping bundle.
+ * started/stopping bundle via {@link Security#addProvider(Provider)} and {@link Security#removeProvider(String)}.
+ * In addition it also registers each provider (even the ones shipping with the JVM) as an OSGi service so that other services can defer loading 
+ * until a certain provider is available.
+ * The OSGi service registration includes a property {@value #PROVIDER_NAME_PROPERTY} with the name of the provider.
  */
 @Component(immediate = true, service= {}, name = "org.apache.sling.commons.crypto.internal.AutoRegisterSecurityProvider")
 @ServiceDescription("Apache Sling Commons Crypto – Auto Register Security Provider")
 public final class OsgiAwareSecurityProviderInstaller implements SynchronousBundleListener {
     private static final String SECURITY_PROVIDER_CONFIGURATION_FILE = "META-INF/services/java.security.Provider";
     private static final Logger LOGGER = LoggerFactory.getLogger(OsgiAwareSecurityProviderInstaller.class);
+    private static final String PROVIDER_NAME_PROPERTY = "provider.name";
+    private final Map<String, ServiceRegistration<Provider>> registeredProviders;
+    private final BundleContext bundleContext;
 
     @Activate
     public OsgiAwareSecurityProviderInstaller(BundleContext bundleContext) {
+        registeredProviders = new ConcurrentHashMap<>();
+        this.bundleContext = bundleContext;
         bundleContext.addBundleListener(this);
+        registerOrUnregisterDefaultProviders(true);
         for (Bundle bundle : bundleContext.getBundles()) {
             if (bundle.getState() == Bundle.ACTIVE) {
-                addOrRemoveProviders(true, bundle);
+                addOrRemoveCustomProviders(true, bundle);
             }
         }
     }
@@ -67,9 +79,10 @@ public final class OsgiAwareSecurityProviderInstaller implements SynchronousBund
         bundleContext.removeBundleListener(this);
         for (Bundle bundle : bundleContext.getBundles()) {
             if (bundle.getState() == Bundle.ACTIVE) {
-                addOrRemoveProviders(false, bundle);
+                addOrRemoveCustomProviders(false, bundle);
             }
         }
+        registerOrUnregisterDefaultProviders(false);
     }
 
     @Override
@@ -84,15 +97,25 @@ public final class OsgiAwareSecurityProviderInstaller implements SynchronousBund
             LOGGER.debug("Ignoring bundle event {} for bundle {}", event.getType(), bundle.getSymbolicName());
             return;
         }
-        addOrRemoveProviders(isAdd, bundle);
+        addOrRemoveCustomProviders(isAdd, bundle);
+    }
+    
+    protected void registerOrUnregisterDefaultProviders(boolean isRegister) {
+        for (Provider provider : Security.getProviders()) {
+            if (isRegister) {
+                registerProviderWithOsgi(this.bundleContext, provider);
+            } else {
+                unregisterProviderWithOsgi(provider.getName(), registeredProviders.remove(provider.getName()));
+            }
+        }
     }
 
-    protected void addOrRemoveProviders(boolean isAdd, Bundle bundle) {
+    protected void addOrRemoveCustomProviders(boolean isAdd, Bundle bundle) {
         try {
             Collection<String> classNames = collectClassNamesFromProviderConfigurationFile(bundle);
             for (String className : classNames) {
                 try {
-                    addOrRemoveProvider(isAdd, bundle, className);
+                    addOrRemoveCustomProvider(isAdd, bundle, className);
                 } catch (ClassNotFoundException e) {
                     LOGGER.error("Class {} not found in bundle {}: {}", className, bundle.getSymbolicName(), e.getMessage(), e);
                 } catch (Exception e) {
@@ -124,7 +147,7 @@ public final class OsgiAwareSecurityProviderInstaller implements SynchronousBund
         return classNames;
     }
 
-    protected void addOrRemoveProvider(boolean isAdd, Bundle bundle, String providerClassName)
+    protected void addOrRemoveCustomProvider(boolean isAdd, Bundle bundle, String providerClassName)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, NoSuchMethodException, SecurityException {
         Class<?> clazz = bundle.loadClass(providerClassName);
@@ -138,11 +161,8 @@ public final class OsgiAwareSecurityProviderInstaller implements SynchronousBund
             if (position == -1) {
                 LOGGER.warn("Failed to add security provider {} (name {}) from bundle {} to the security providers list. Provider with that name already registered.", providerClassName, provider.getName(), bundle);
             }
-            // also add service registration for the provider so that other services can defer loading until the provider is available
-            Hashtable<String, String> props = new Hashtable<>();
-            props.put("provider.name", provider.getName());
-            bundle.getBundleContext().registerService(Provider.class, provider, props);
             LOGGER.info("Added security provider {} (name {}) from bundle {} to last position {}", providerClassName, provider.getName(), bundle, position);
+            registerProviderWithOsgi(bundle.getBundleContext(), provider);
         } else {
             if (Security.getProvider(provider.getName()) != null) {
                 Security.removeProvider(provider.getName());
@@ -150,6 +170,29 @@ public final class OsgiAwareSecurityProviderInstaller implements SynchronousBund
             } else {
                 LOGGER.warn("Security provider {} (name {}) not found for removal", providerClassName, provider.getName());
             }
+            unregisterProviderWithOsgi(provider.getName(), registeredProviders.remove(provider.getName()));
+        }
+    }
+
+    private void registerProviderWithOsgi(BundleContext context, Provider provider) {
+        // also add service registration for the provider so that other services can defer loading until the provider is available
+        Hashtable<String, String> props = new Hashtable<>();
+        props.put(PROVIDER_NAME_PROPERTY, provider.getName());
+        ServiceRegistration<Provider> registration = context.registerService(Provider.class, provider, props);
+        registeredProviders.put(provider.getName(), registration);
+        LOGGER.info("Registered security provider with name {} as OSGi service", provider.getName());
+    }
+
+    private void unregisterProviderWithOsgi(String name, ServiceRegistration<Provider> registration) {
+        if (registration == null) {
+            LOGGER.warn("No service registration found for security provider with name '{}' to unregister", name);
+            return;
+        }
+        try {
+            registration.unregister();
+            LOGGER.info("Unregistered security provider with name '{}' as OSGi service", name);
+        } catch (IllegalStateException e) {
+            LOGGER.warn("Service for provider with name {} is already unregistered: {}", name, e.getMessage(), e);
         }
     }
 }
