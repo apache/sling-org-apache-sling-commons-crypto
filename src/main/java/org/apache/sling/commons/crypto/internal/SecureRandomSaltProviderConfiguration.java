@@ -45,7 +45,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
         name = "Salt Length",
         description = "Length of the generated salt in bytes"
     )
-    int keyLength() default 8;
+    int keyLength() default 16;
 
     String webconsole_configurationFactory_nameHint() default "{names} {algorithm}";
 
