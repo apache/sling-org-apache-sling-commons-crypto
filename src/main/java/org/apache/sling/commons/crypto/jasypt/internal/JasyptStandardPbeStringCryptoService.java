@@ -18,7 +18,6 @@
  */
 package org.apache.sling.commons.crypto.jasypt.internal;
 
-import java.security.Provider;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
@@ -65,11 +64,6 @@ public final class JasyptStandardPbeStringCryptoService implements CryptoService
 
     @Reference
     private volatile IvGenerator ivGenerator;
-
-    @Reference(
-        cardinality = ReferenceCardinality.OPTIONAL
-    )
-    private volatile Provider securityProvider;
 
     @Reference(
         cardinality = ReferenceCardinality.OPTIONAL
@@ -123,10 +117,6 @@ public final class JasyptStandardPbeStringCryptoService implements CryptoService
         final String securityProviderName = configuration.securityProviderName();
         if (Objects.nonNull(securityProviderName) && !securityProviderName.isBlank()) {
             encryptor.setProviderName(securityProviderName);
-        }
-        final Provider provider = this.securityProvider;
-        if (Objects.nonNull(provider)) {
-            encryptor.setProvider(provider);
         }
         final SaltGenerator saltGenerator = this.saltGenerator;
         if (Objects.nonNull(saltGenerator)) {
