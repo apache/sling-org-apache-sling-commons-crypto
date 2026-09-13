@@ -73,6 +73,13 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
     )
     String securityProviderName() default "SunJCE";
 
+    @AttributeDefinition(
+        name = "Security Provider Target",
+        description = "Filter expression to target a Security Provider (usually by name with a pattern like \"(provider.name=<securityProviderName>)\"). Useful to defer loading of the service until the custom Security Provider bundle is available and properly registered.",
+        required = false
+    )
+    String securityProvider_target();
+
     // automatically evaluated (https://docs.osgi.org/specification/osgi.cmpn/8.0.0/service.component.html#service.component-target.property)
     @AttributeDefinition(
         name = "Password Provider Target",

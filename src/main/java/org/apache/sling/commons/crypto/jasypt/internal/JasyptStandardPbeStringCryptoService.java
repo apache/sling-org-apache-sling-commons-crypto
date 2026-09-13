@@ -18,6 +18,7 @@
  */
 package org.apache.sling.commons.crypto.jasypt.internal;
 
+import java.security.Provider;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
@@ -69,6 +70,11 @@ public final class JasyptStandardPbeStringCryptoService implements CryptoService
         cardinality = ReferenceCardinality.OPTIONAL
     )
     private volatile SaltGenerator saltGenerator;
+
+    // only used to potentially defer loading of this service until the security provider is available, but not used directly
+    @SuppressWarnings("unused")
+    @Reference
+    private volatile Provider securityProvider;
 
     private StandardPBEStringEncryptor encryptor;
 

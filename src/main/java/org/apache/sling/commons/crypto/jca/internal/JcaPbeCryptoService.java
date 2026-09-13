@@ -70,7 +70,6 @@ import org.slf4j.LoggerFactory;
 @Component(service = CryptoService.class)
 @Designate(ocd = JcaPbeCryptoServiceConfiguration.class, factory = true)
 @ServiceDescription("Apache Sling Commons Crypto – JCA PBE String Crypto Service")
-@SuppressWarnings({ "java:S1117", "java:S3077", "java:S6212" })
 public final class JcaPbeCryptoService implements CryptoService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JcaPbeCryptoService.class);
@@ -90,8 +89,8 @@ public final class JcaPbeCryptoService implements CryptoService {
 
     @Activate
     public JcaPbeCryptoService(final JcaPbeCryptoServiceConfiguration configuration, BundleContext bundleContext,
-            @Reference(name="passwordProvider") PasswordProvider passwordProvider, @Reference(name="saltProvider") SaltProvider saltProvider)
-            throws NoSuchAlgorithmException { //
+            @Reference(name="passwordProvider") PasswordProvider passwordProvider, @Reference(name="saltProvider") SaltProvider saltProvider, @Reference(name="securityProvider") Provider securityProvider)
+            throws NoSuchAlgorithmException {
         this(configuration, saltProvider.getSalt(), passwordProvider);
     }
 
