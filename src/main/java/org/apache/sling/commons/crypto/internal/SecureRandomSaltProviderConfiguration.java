@@ -22,7 +22,7 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 @ObjectClassDefinition(
-    name = "Apache Sling Commons Crypto “SecureRandom Salt Provider”",
+    name = "Apache Sling Commons Crypto SecureRandom Salt Provider",
     description = "Provides salts created from random bytes"
 )
 @SuppressWarnings("java:S100")

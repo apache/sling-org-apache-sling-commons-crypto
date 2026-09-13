@@ -22,7 +22,7 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 @ObjectClassDefinition(
-    name = "Apache Sling Commons Crypto “File Password Provider”",
+    name = "Apache Sling Commons Crypto File Password Provider",
     description = "Provides passwords from files"
 )
 @SuppressWarnings("java:S100")

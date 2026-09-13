@@ -27,7 +27,7 @@ import static org.jasypt.commons.CommonUtils.STRING_OUTPUT_TYPE_HEXADECIMAL;
 import static org.jasypt.encryption.pbe.StandardPBEByteEncryptor.DEFAULT_KEY_OBTENTION_ITERATIONS;
 
 @ObjectClassDefinition(
-    name = "Apache Sling Commons Crypto “Jasypt Standard PBE String Crypto Service”",
+    name = "Apache Sling Commons Crypto Jasypt Standard PBE String Crypto Service (Deprecated)",
     description = "Crypto service which uses Jasypt StandardPBEStringEncryptor for encryption and decryption"
 )
 @SuppressWarnings("java:S100")
