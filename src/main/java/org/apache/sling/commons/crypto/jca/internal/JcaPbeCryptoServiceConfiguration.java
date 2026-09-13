@@ -58,7 +58,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
         description = "Number of iterations to derive a key from the password as defined in the PBE algorithm. The higher the number of iterations, the more secure the key derivation is,"
                 + " but it also increases the time taken to derive the key."
     )
-    int numKeyIterations() default 65536;
+    int numKeyIterations() default 220000;
 
     @AttributeDefinition(
         name = "PBE Key Length (bits)",
