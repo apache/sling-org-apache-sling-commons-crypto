@@ -98,7 +98,7 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
         if (Objects.nonNull(forwardRequestUri) && forwardRequestUri.equals(request.getRequestURI())) {
             final String ciphertext = (String) request.getAttribute(ATTRIBUTE_CIPHERTEXT);
             if (Objects.nonNull(ciphertext)) {
-                final String html = String.format("<p id=\"ciphertext\">Encrypted message: %s</p>", ciphertext);
+                final String html = String.format("<p id=\"ciphertext\">Encrypted message: %s</p>", JcaProviderAlgorithmsWebConsolePlugin.escapeHtml(ciphertext));
                 writer.println(html);
             }
         }
@@ -159,8 +159,8 @@ public final class EncryptWebConsolePlugin extends HttpServlet {
             CryptoService service = findCryptoService(id);
             final String algorithm = Objects.toString(service.getAlgorithmDescription(), "");
             final String label = String.format("Service id %s (%s), names: %s, algorithm(s): %s", id, description, Arrays.toString(names), algorithm);
-            builder.append("<option value=\"").append(id).append("\">");
-            builder.append(label);
+            builder.append("<option value=\"").append(JcaProviderAlgorithmsWebConsolePlugin.escapeHtml(id)).append("\">");
+            builder.append(JcaProviderAlgorithmsWebConsolePlugin.escapeHtml(label));
             builder.append("</option>");
         }
         builder.append("</label>");
