@@ -31,6 +31,7 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.Optional;
@@ -121,6 +122,18 @@ public final class JcaPbeCryptoService implements CryptoService {
         }
     }
 
+    private static void destroyData(byte[] data) {
+        if (data != null) {
+            Arrays.fill(data, (byte) 0x00);
+        }
+    }
+
+    private static void destroyData(char[] data) {
+        if (data != null) {
+            Arrays.fill(data, '\0');
+        }
+    }
+
     private @NotNull SecretKey createKey(byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
         final char[] password = passwordProvider.getPassword();
         // for regular PBE key this is completely ignored except for the password (as all logic is encapsulated in the actual cipher
@@ -131,21 +144,28 @@ public final class JcaPbeCryptoService implements CryptoService {
                 salt,
                 configuration.numKeyIterations(),
                 configuration.keyLengthBits());
-        SecretKeyFactory secretKeyFactory = securityProvider.isPresent()
-                ? SecretKeyFactory.getInstance(configuration.secretKeyFactoryAlgorithm(), securityProvider.get())
-                : SecretKeyFactory.getInstance(configuration.secretKeyFactoryAlgorithm());
-        SecretKey originalKey = secretKeyFactory.generateSecret(keySpec);
-        keySpec.clearPassword(); // clear password from memory after use
-        if (configuration.secretKeyFactoryAlgorithm().equals(configuration.cipherAlgorithm())) {
-            // if the cipher algorithm is the same as the secret key factory algorithm then the cipher takes care of the actual logic and
-            // uses the key as is (which is just a wrapper around the given password)
-            return originalKey;
-        } else {
-            // wrap as key for the proper cipher algorithm (e.g., AES) instead of the PBE algorithm (e.g., PBKDF2WithHmacSHA512)
-            SecretKey derivedKey = new SecretKeySpec(originalKey.getEncoded(), extractAlgorithmName(configuration.cipherAlgorithm()));
-            destroyKey(originalKey); // destroy the original key as it is no longer needed
-            return derivedKey;
-        }
+        try {
+            SecretKeyFactory secretKeyFactory = securityProvider.isPresent()
+                    ? SecretKeyFactory.getInstance(configuration.secretKeyFactoryAlgorithm(), securityProvider.get())
+                    : SecretKeyFactory.getInstance(configuration.secretKeyFactoryAlgorithm());
+            SecretKey originalKey = secretKeyFactory.generateSecret(keySpec);
+            
+            if (configuration.secretKeyFactoryAlgorithm().equals(configuration.cipherAlgorithm())) {
+                // if the cipher algorithm is the same as the secret key factory algorithm then the cipher takes care of the actual logic and
+                // uses the key as is (which is just a wrapper around the given password)
+                return originalKey;
+            } else {
+                // wrap as key for the proper cipher algorithm (e.g., AES) instead of the PBE algorithm (e.g., PBKDF2WithHmacSHA512)
+                byte[] keyBytes = originalKey.getEncoded();
+                SecretKey derivedKey = new SecretKeySpec(keyBytes, extractAlgorithmName(configuration.cipherAlgorithm()));
+                destroyData(keyBytes); // clear key bytes from memory after use
+                destroyKey(originalKey); // destroy the original key as it is no longer needed
+                return derivedKey;
+            }
+         } finally {
+             keySpec.clearPassword(); // clear password from memory after use
+             destroyData(password); // clear password from memory after use
+         }
     }
 
     /** Extracts the algorithm name from the cipher algorithm string.
