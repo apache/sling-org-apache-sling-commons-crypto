@@ -20,7 +20,7 @@ package org.apache.sling.commons.crypto.internal;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
+import java.util.Arrays;
 import java.util.Objects;
 
 import javax.crypto.SecretKey;
@@ -100,11 +100,15 @@ public final class PbeSecretKeyProvider implements SecretKeyProvider {
     public @NotNull SecretKey getSecretKey() {
         final var configuration = this.configuration;
         Objects.requireNonNull(configuration, "Configuration must not be null");
+        char[] password = passwordProvider.getPassword();
+        final PBEKeySpec keySpec = new PBEKeySpec(password, saltProvider.getSalt(), configuration.iterationCount(), configuration.keyLength());
         try {
-            final KeySpec keySpec = new PBEKeySpec(passwordProvider.getPassword(), saltProvider.getSalt(), configuration.iterationCount(), configuration.keyLength());
             return factory.generateSecret(keySpec);
         } catch (InvalidKeySpecException e) {
             throw new IllegalArgumentException(e.getMessage(), e);
+        } finally {
+            Arrays.fill(password, '\0');
+            keySpec.clearPassword();
         }
     }
 

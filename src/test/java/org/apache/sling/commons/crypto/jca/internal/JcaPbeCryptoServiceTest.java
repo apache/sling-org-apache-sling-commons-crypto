@@ -88,7 +88,7 @@ class JcaPbeCryptoServiceTest {
     @BeforeEach
     void setUp() throws NoSuchAlgorithmException {
         passwordProvider = mock(PasswordProvider.class);
-        when(passwordProvider.getPassword()).thenReturn("+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray());
+        when(passwordProvider.getPassword()).thenAnswer(i -> "+AQ?aDes!'DBMkrCi:FE6q\\sOn=Pbmn=PK8n=PK?".toCharArray()); // long password to test PBKDF2 with high iteration count
         salt = new byte[16];
         Random random = new Random();
         random.nextBytes(salt);

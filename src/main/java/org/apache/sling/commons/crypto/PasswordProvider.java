@@ -32,7 +32,7 @@ public interface PasswordProvider {
     /**
      * Provides the password.
      *
-     * @return The password
+     * @return The password (a newly created character array which should be cleared after use).
      */
     public abstract char @NotNull [] getPassword();
 
