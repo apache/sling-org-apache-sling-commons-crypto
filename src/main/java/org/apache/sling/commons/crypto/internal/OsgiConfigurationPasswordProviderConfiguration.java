@@ -40,7 +40,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
         name = "Password",
         description = "The actual password. For security reasons only use with interpolation to reference external values via pattern \"$[secret:...]\" as outlined in https://github.com/apache/felix-dev/blob/master/configadmin-plugins/interpolation/README.md, e.g. \"$[secret:sling.crypto.password]\"."
     )
-    String password();
+    String _password();
 
     String webconsole_configurationFactory_nameHint() default "{names}";
 

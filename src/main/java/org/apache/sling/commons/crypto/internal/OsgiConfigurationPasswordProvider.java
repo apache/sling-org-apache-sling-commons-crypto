@@ -46,7 +46,7 @@ public class OsgiConfigurationPasswordProvider implements PasswordProvider {
 
     @Override
     public char @NotNull [] getPassword() {
-        return configuration.password().toCharArray();
+        return configuration._password().toCharArray();
     }
 
 }
